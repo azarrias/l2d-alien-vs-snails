@@ -1,15 +1,47 @@
 push = require 'libs.push'
+require 'Util'
 
 local MOBILE_OS = (love._version_major > 0 or love._version_minor >= 9) and (love.system.getOS() == 'Android' or love.system.getOS() == 'OS X')
 local WEB_OS = (love._version_major > 0 or love._version_minor >= 9) and love.system.getOS() == 'Web'
 local WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-local VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 512, 288
-local GAME_TITLE = 'Hello LÖVE2D!!'
+local VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 256, 144
+local GAME_TITLE = 'Alien vs Snails'
 local FONT_SIZE = 16
+local TILE_SIZE = 16
+
+-- tile ID constants
+GROUND = 1
+SKY = 2 -- transparent sprite
 
 function love.load()
   if arg[#arg] == "-debug" then 
     require("mobdebug").start() 
+  end
+  
+  math.randomseed(os.time())
+  
+  tiles = {}
+  
+  -- load tiles from tilesheet image
+  tilesheet = love.graphics.newImage('graphics/tiles.png')
+  quads = GenerateQuads(tilesheet, TILE_SIZE, TILE_SIZE)  
+  
+  mapWidth = VIRTUAL_WIDTH / TILE_SIZE
+  mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
+  
+  backgroundR = math.random()
+  backgroundG = math.random()
+  backgroundB = math.random()
+  
+  for y = 1, mapHeight do
+    table.insert(tiles, {})
+    
+    for x = 1, mapWidth do
+      -- keep IDs for whatever quad we want to render
+      table.insert(tiles[y], {
+          id = y < 5 and SKY or GROUND
+      })
+    end
   end
   
   -- Set up window
@@ -23,14 +55,6 @@ function love.load()
   -- use nearest-neighbor (point) filtering on upscaling and downscaling to prevent blurring of text and 
   -- graphics instead of the bilinear filter that is applied by default 
   love.graphics.setDefaultFilter('nearest', 'nearest')
-  
-  font = love.graphics.newFont(FONT_SIZE)
-  love.graphics.setFont(font)
-  os_str = love.system.getOS()
-  vmajor, vminor, vrevision, vcodename = love.getVersion()
-  v_str = string.format("Love version: %d.%d.%d - %s", vmajor, vminor, vrevision, vcodename)
-  bd_str = love.filesystem.getSourceBaseDirectory()
-  wd_str = love.filesystem.getWorkingDirectory()
   
   love.keyboard.keysPressed = {}
 end
@@ -56,10 +80,14 @@ end
 
 function love.draw()
   push:start()
-  love.graphics.print(GAME_TITLE, 0, 0)
-  love.graphics.print("O.S.: " .. os_str, 0, 16)
-  love.graphics.print(v_str, 0, 32)
-  love.graphics.print("Source base path: " .. bd_str, 0, 48)
-  love.graphics.print("Working path: " .. wd_str, 0, 64)
+  love.graphics.clear(backgroundR, backgroundG, backgroundB, 1)
+  
+  for y = 1, mapHeight do
+    for x = 1, mapWidth do
+      local tile = tiles[y][x]
+      love.graphics.draw(tilesheet, quads[tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+    end
+  end
+
   push:finish()
 end
