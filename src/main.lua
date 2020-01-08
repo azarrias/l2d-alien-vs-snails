@@ -9,6 +9,8 @@ local GAME_TITLE = 'Alien vs Snails'
 local FONT_SIZE = 16
 local TILE_SIZE = 16
 
+local CAMERA_SCROLL_SPEED = 40
+
 -- tile ID constants
 GROUND = 1
 SKY = 2 -- transparent sprite
@@ -26,8 +28,11 @@ function love.load()
   tilesheet = love.graphics.newImage('graphics/tiles.png')
   quads = GenerateQuads(tilesheet, TILE_SIZE, TILE_SIZE)  
   
-  mapWidth = VIRTUAL_WIDTH / TILE_SIZE
+  mapWidth = 20
   mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
+  
+  -- offset that will be used to translate the scene to emulate a camera
+  cameraScroll = 0
   
   backgroundR = math.random()
   backgroundG = math.random()
@@ -65,6 +70,12 @@ function love.update(dt)
     love.event.quit()
   end
   
+  if love.keyboard.isDown('left') then
+    cameraScroll = cameraScroll - CAMERA_SCROLL_SPEED * dt
+  elseif love.keyboard.isDown('right') then
+    cameraScroll = cameraScroll + CAMERA_SCROLL_SPEED * dt
+  end
+  
   love.keyboard.keysPressed = {}
 end
 
@@ -80,6 +91,12 @@ end
 
 function love.draw()
   push:start()
+  
+  -- translate scene by camera scroll amount; negative shifts have the effect of making it seem
+  -- like we're actually moving right and vice-versa; note the use of math.floor, as rendering
+  -- fractional camera offsets with a virtual resolution will result in weird pixelation and artifacting
+  -- as things are attempted to be drawn fractionally and then forced onto a small virtual canvas
+  love.graphics.translate(-math.floor(cameraScroll), 0)
   love.graphics.clear(backgroundR, backgroundG, backgroundB, 1)
   
   for y = 1, mapHeight do
