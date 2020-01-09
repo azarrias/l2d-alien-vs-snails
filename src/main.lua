@@ -1,4 +1,7 @@
+Class = require 'libs.class'
 push = require 'libs.push'
+
+require 'Animation'
 require 'Util'
 
 local MOBILE_OS = (love._version_major > 0 or love._version_minor >= 9) and (love.system.getOS() == 'Android' or love.system.getOS() == 'OS X')
@@ -40,6 +43,18 @@ function love.load()
   playerX = VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
   playerY = ((TOP_GROUND_TILE_Y - 1) * TILE_SIZE) - CHARACTER_HEIGHT
   
+  -- player animations
+  playerIdle = Animation {
+    frames = { playerQuads[1] },
+    interval = 1
+  }
+  playerMoving = Animation {
+    frames = { playerQuads[10], playerQuads[11] },
+    interval = 0.2
+  }
+  
+  playerAnimation = playerIdle
+  
   mapWidth = 20
   mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
   
@@ -77,15 +92,26 @@ function love.load()
 end
 
 function love.update(dt)
+  -- update the animation so it scrolls through the right frames
+  playerAnimation:update(dt)
+  
   -- exit if esc is pressed
   if love.keyboard.keysPressed['escape'] then
     love.event.quit()
+  elseif love.keyboard.keysPressed['left'] then
+    playerAnimation = playerMoving
+    playerAnimation:setOrientation('left')
+  elseif love.keyboard.keysPressed['right'] then
+    playerAnimation = playerMoving
+    playerAnimation:setOrientation('right')
   end
   
   if love.keyboard.isDown('left') then
     playerX = playerX - CHARACTER_MOVE_SPEED * dt
   elseif love.keyboard.isDown('right') then
     playerX = playerX + CHARACTER_MOVE_SPEED * dt
+  else
+    playerAnimation = playerIdle
   end
   
   -- set the camera's left edge to half the screen to the left of the player's x coordinate
@@ -121,8 +147,15 @@ function love.draw()
     end
   end
   
-  -- draw player character
-  love.graphics.draw(playerSheet, playerQuads[1], math.floor(playerX), math.floor(playerY))
+  -- draw animated player character
+  playerAnimation:draw(
+    playerSheet, 
+    -- shift the character half its width and height, since the origin must be at the sprite's center
+    math.floor(playerX + CHARACTER_WIDTH / 2), 
+    math.floor(playerY + CHARACTER_HEIGHT / 2),
+    0, 1, 1,
+    -- set origin to the sprite center (to allow reversing it through negative scaling)
+    CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
 
   push:finish()
 end
