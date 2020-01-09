@@ -8,8 +8,11 @@ local VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 256, 144
 local GAME_TITLE = 'Alien vs Snails'
 local FONT_SIZE = 16
 local TILE_SIZE = 16
+local CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 
 local CAMERA_SCROLL_SPEED = 40
+
+local TOP_GROUND_TILE_Y = 7
 
 -- tile ID constants
 GROUND = 1
@@ -28,6 +31,14 @@ function love.load()
   tilesheet = love.graphics.newImage('graphics/tiles.png')
   quads = GenerateQuads(tilesheet, TILE_SIZE, TILE_SIZE)  
   
+  -- player character texture
+  playerSheet = love.graphics.newImage('graphics/character.png')
+  playerQuads = GenerateQuads(playerSheet, CHARACTER_WIDTH, CHARACTER_HEIGHT)
+  
+  -- place character in the middle of the screen, above the top ground tile
+  playerX = VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
+  playerY = ((TOP_GROUND_TILE_Y - 1) * TILE_SIZE) - CHARACTER_HEIGHT
+  
   mapWidth = 20
   mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
   
@@ -44,7 +55,7 @@ function love.load()
     for x = 1, mapWidth do
       -- keep IDs for whatever quad we want to render
       table.insert(tiles[y], {
-          id = y < 5 and SKY or GROUND
+          id = y < TOP_GROUND_TILE_Y and SKY or GROUND
       })
     end
   end
@@ -105,6 +116,9 @@ function love.draw()
       love.graphics.draw(tilesheet, quads[tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
     end
   end
+  
+  -- draw player character
+  love.graphics.draw(playerSheet, playerQuads[1], playerX, playerY)
 
   push:finish()
 end
