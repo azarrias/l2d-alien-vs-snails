@@ -11,6 +11,7 @@ local TILE_SIZE = 16
 local CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 
 local CAMERA_SCROLL_SPEED = 40
+local CHARACTER_MOVE_SPEED = 40
 
 local TOP_GROUND_TILE_Y = 7
 
@@ -82,10 +83,13 @@ function love.update(dt)
   end
   
   if love.keyboard.isDown('left') then
-    cameraScroll = cameraScroll - CAMERA_SCROLL_SPEED * dt
+    playerX = playerX - CHARACTER_MOVE_SPEED * dt
   elseif love.keyboard.isDown('right') then
-    cameraScroll = cameraScroll + CAMERA_SCROLL_SPEED * dt
+    playerX = playerX + CHARACTER_MOVE_SPEED * dt
   end
+  
+  -- set the camera's left edge to half the screen to the left of the player's x coordinate
+  cameraScroll = playerX - (VIRTUAL_WIDTH / 2) + (CHARACTER_WIDTH / 2)
   
   love.keyboard.keysPressed = {}
 end
@@ -118,7 +122,7 @@ function love.draw()
   end
   
   -- draw player character
-  love.graphics.draw(playerSheet, playerQuads[1], playerX, playerY)
+  love.graphics.draw(playerSheet, playerQuads[1], math.floor(playerX), math.floor(playerY))
 
   push:finish()
 end
