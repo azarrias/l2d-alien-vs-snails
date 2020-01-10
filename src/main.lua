@@ -15,12 +15,16 @@ local CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 
 local CAMERA_SCROLL_SPEED = 40
 local CHARACTER_MOVE_SPEED = 40
+local JUMP_VELOCITY = -200
+local GRAVITY = 7
 
 local TOP_GROUND_TILE_Y = 7
 
 -- tile ID constants
 GROUND = 1
 SKY = 2 -- transparent sprite
+
+local playerOrientation = 'right'
 
 function love.load()
   if arg[#arg] == "-debug" then 
@@ -52,8 +56,15 @@ function love.load()
     frames = { playerQuads[10], playerQuads[11] },
     interval = 0.2
   }
+  playerJump = Animation {
+    frames = { playerQuads[3] },
+    interval = 1
+  }
   
   playerAnimation = playerIdle
+    
+  -- player vertical velocity
+  playerDY = 0
   
   mapWidth = 20
   mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
@@ -92,26 +103,46 @@ function love.load()
 end
 
 function love.update(dt)
+  -- apply velocity to character
+  playerDY = playerDY + GRAVITY
+  playerY = playerY + playerDY * dt
+  
+  -- if the player goes below the map limit, set its velocity to 0
+  -- since collision detection is not implemented yet
+  if playerY > (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - CHARACTER_HEIGHT then
+    playerY = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - CHARACTER_HEIGHT
+    playerDY = 0
+  end
+  
   -- update the animation so it scrolls through the right frames
   playerAnimation:update(dt)
   
   -- exit if esc is pressed
   if love.keyboard.keysPressed['escape'] then
     love.event.quit()
-  elseif love.keyboard.keysPressed['left'] then
-    playerAnimation = playerMoving
-    playerAnimation:setOrientation('left')
-  elseif love.keyboard.keysPressed['right'] then
-    playerAnimation = playerMoving
-    playerAnimation:setOrientation('right')
+  -- jump
+  elseif love.keyboard.keysPressed['space'] and playerDY == 0 then
+    playerDY = JUMP_VELOCITY
+    playerAnimation = playerJump
   end
   
+  -- move
   if love.keyboard.isDown('left') then
+    if playerDY == 0 then
+      playerAnimation = playerMoving
+    end
+    playerOrientation = 'left'
     playerX = playerX - CHARACTER_MOVE_SPEED * dt
   elseif love.keyboard.isDown('right') then
+    if playerDY == 0 then
+      playerAnimation = playerMoving
+    end
+    playerOrientation = 'right'
     playerX = playerX + CHARACTER_MOVE_SPEED * dt
   else
-    playerAnimation = playerIdle
+    if playerDY == 0 then
+      playerAnimation = playerIdle
+    end
   end
   
   -- set the camera's left edge to half the screen to the left of the player's x coordinate
@@ -153,7 +184,7 @@ function love.draw()
     -- shift the character half its width and height, since the origin must be at the sprite's center
     math.floor(playerX + CHARACTER_WIDTH / 2), 
     math.floor(playerY + CHARACTER_HEIGHT / 2),
-    0, 1, 1,
+    0, playerOrientation == 'left' and -1 or 1, 1,
     -- set origin to the sprite center (to allow reversing it through negative scaling)
     CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
 
