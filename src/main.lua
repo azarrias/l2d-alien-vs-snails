@@ -237,14 +237,20 @@ function generateLevel()
   
   -- iterate over X at the top level to generate the level in columns instead of rows
   for x = 1, mapWidth do
-    -- 10% random chance for a pillar
-    local spawnPillar = math.random(10) == 1
+    -- 15% random chance to skip this column; i.e. a chasm
+    if math.random(100) < 15 then
+      -- workaround for lua missing the 'continue' statement
+      goto continue
+    end
+    
+    -- 15% random chance for a pillar
+    local spawnPillar = math.random(100) < 15
     
     if spawnPillar then
-      for y = 4, 6 do
+      for y = 5, 6 do
         tiles[y][x] = {
           id = GROUND,
-          topper = y == 4 and true or false
+          topper = y == 5 and true or false
         }
       end
     end
@@ -256,6 +262,8 @@ function generateLevel()
         topper = (not spawnPillar and y == TOP_GROUND_TILE_Y) and true or false
       }
     end
+    
+    ::continue::
   end
   
   return tiles
