@@ -90,7 +90,7 @@ function love.load()
   -- player vertical velocity
   playerDY = 0
   
-  mapWidth = 20
+  mapWidth = 50
   mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
   
   -- offset that will be used to translate the scene to emulate a camera
@@ -222,15 +222,39 @@ end
 function generateLevel()
   local tiles = {}
   
+  -- create 2D table full of sky transparent tiles, so we can just change tiles as needed
   for y = 1, mapHeight do
     table.insert(tiles, {})
     
     for x = 1, mapWidth do
       -- keep IDs for whatever quad we want to render
       table.insert(tiles[y], {
-          id = y < TOP_GROUND_TILE_Y and SKY or GROUND,
-          topper = y == TOP_GROUND_TILE_Y and true or false
+          id = SKY,
+          topper = false
       })
+    end
+  end
+  
+  -- iterate over X at the top level to generate the level in columns instead of rows
+  for x = 1, mapWidth do
+    -- 10% random chance for a pillar
+    local spawnPillar = math.random(10) == 1
+    
+    if spawnPillar then
+      for y = 4, 6 do
+        tiles[y][x] = {
+          id = GROUND,
+          topper = y == 4 and true or false
+        }
+      end
+    end
+  
+    -- always generate ground
+    for y = TOP_GROUND_TILE_Y, mapHeight do
+      tiles[y][x] = {
+        id = GROUND,
+        topper = (not spawnPillar and y == TOP_GROUND_TILE_Y) and true or false
+      }
     end
   end
   
