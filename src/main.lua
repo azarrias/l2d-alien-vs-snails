@@ -13,6 +13,18 @@ local FONT_SIZE = 16
 local TILE_SIZE = 16
 local CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 
+-- number of tiles in each tile set
+local TILE_SET_WIDTH = 5
+local TILE_SET_HEIGHT = 4
+
+-- number of tile sets in sheet
+local TILE_SETS_WIDE = 6
+local TILE_SETS_TALL = 10
+
+-- number of topper sets in sheet
+local TOPPER_SETS_WIDE = 6
+local TOPPER_SETS_TALL = 18
+
 local CAMERA_SCROLL_SPEED = 40
 local CHARACTER_MOVE_SPEED = 40
 local JUMP_VELOCITY = -200
@@ -21,10 +33,12 @@ local GRAVITY = 7
 local TOP_GROUND_TILE_Y = 7
 
 -- tile ID constants
-GROUND = 1
-SKY = 2 -- transparent sprite
+GROUND = 13
+SKY = 5 -- transparent sprite
+TOPPER = 3
 
 local playerOrientation = 'right'
+local tiles = {}
 
 function love.load()
   if arg[#arg] == "-debug" then 
@@ -33,11 +47,21 @@ function love.load()
   
   math.randomseed(os.time())
   
-  tiles = {}
+  -- load tiles from tilesheet image and generate quads for it
+  tileSheet = love.graphics.newImage('graphics/tiles.png')
+  quads = GenerateQuads(tileSheet, TILE_SIZE, TILE_SIZE)  
   
-  -- load tiles from tilesheet image
-  tilesheet = love.graphics.newImage('graphics/tiles.png')
-  quads = GenerateQuads(tilesheet, TILE_SIZE, TILE_SIZE)  
+  topperSheet = love.graphics.newImage('graphics/tile_tops.png')
+  topperQuads = GenerateQuads(topperSheet, TILE_SIZE, TILE_SIZE)  
+  
+  -- subdivide quad tables into tile sets
+  -- (there are multiple tile sets within these sprite sheets)
+  tileSets = GenerateTileSets(quads, TILE_SETS_WIDE, TILE_SETS_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
+  topperSets = GenerateTileSets(topperQuads, TOPPER_SETS_WIDE, TOPPER_SETS_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
+  
+  -- randomize tile set and topper set for the level
+  tileSet = math.random(#tileSets)
+  topperSet = math.random(#topperSets)
   
   -- player character texture
   playerSheet = love.graphics.newImage('graphics/character.png')
@@ -76,16 +100,7 @@ function love.load()
   backgroundG = math.random()
   backgroundB = math.random()
   
-  for y = 1, mapHeight do
-    table.insert(tiles, {})
-    
-    for x = 1, mapWidth do
-      -- keep IDs for whatever quad we want to render
-      table.insert(tiles[y], {
-          id = y < TOP_GROUND_TILE_Y and SKY or GROUND
-      })
-    end
-  end
+  tiles = generateLevel()
   
   -- Set up window
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -120,10 +135,18 @@ function love.update(dt)
   -- exit if esc is pressed
   if love.keyboard.keysPressed['escape'] then
     love.event.quit()
+  end
+  
   -- jump
-  elseif love.keyboard.keysPressed['space'] and playerDY == 0 then
+  if love.keyboard.keysPressed['space'] and playerDY == 0 then
     playerDY = JUMP_VELOCITY
     playerAnimation = playerJump
+  end
+  
+  -- randomize tile set and topper set by pressing r
+  if love.keyboard.keysPressed['r'] then
+    tileSet = math.random(#tileSets)
+    topperSet = math.random(#topperSets)
   end
   
   -- move
@@ -174,7 +197,12 @@ function love.draw()
   for y = 1, mapHeight do
     for x = 1, mapWidth do
       local tile = tiles[y][x]
-      love.graphics.draw(tilesheet, quads[tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+      love.graphics.draw(tileSheet, tileSets[tileSet][tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+      
+      -- if the tile has the topper flag, draw the topper sprite on top of it
+      if tile.topper then
+        love.graphics.draw(topperSheet, topperSets[topperSet][TOPPER], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+      end
     end
   end
   
@@ -189,4 +217,22 @@ function love.draw()
     CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
 
   push:finish()
+end
+
+function generateLevel()
+  local tiles = {}
+  
+  for y = 1, mapHeight do
+    table.insert(tiles, {})
+    
+    for x = 1, mapWidth do
+      -- keep IDs for whatever quad we want to render
+      table.insert(tiles[y], {
+          id = y < TOP_GROUND_TILE_Y and SKY or GROUND,
+          topper = y == TOP_GROUND_TILE_Y and true or false
+      })
+    end
+  end
+  
+  return tiles
 end
