@@ -1,8 +1,4 @@
-Class = require 'libs.class'
-push = require 'libs.push'
-
-require 'Animation'
-require 'Util'
+require 'Globals'
 
 local MOBILE_OS = (love._version_major > 0 or love._version_minor >= 9) and (love.system.getOS() == 'Android' or love.system.getOS() == 'OS X')
 local WEB_OS = (love._version_major > 0 or love._version_minor >= 9) and love.system.getOS() == 'Web'
@@ -29,13 +25,6 @@ local CAMERA_SCROLL_SPEED = 40
 local CHARACTER_MOVE_SPEED = 40
 local JUMP_VELOCITY = -200
 local GRAVITY = 7
-
-local TOP_GROUND_TILE_Y = 7
-
--- tile ID constants
-GROUND = 13
-SKY = 5 -- transparent sprite
-TOPPER = 3
 
 local playerOrientation = 'right'
 local tiles = {}
@@ -90,9 +79,6 @@ function love.load()
   -- player vertical velocity
   playerDY = 0
   
-  mapWidth = 50
-  mapHeight = VIRTUAL_HEIGHT / TILE_SIZE
-  
   -- offset that will be used to translate the scene to emulate a camera
   cameraScroll = 0
   
@@ -100,7 +86,7 @@ function love.load()
   backgroundG = math.random()
   backgroundB = math.random()
   
-  tiles = generateLevel()
+  tiles = LevelMaker.create(100, 10)
   
   -- Set up window
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -194,14 +180,16 @@ function love.draw()
   love.graphics.translate(-math.floor(cameraScroll), 0)
   love.graphics.clear(backgroundR, backgroundG, backgroundB, 1)
   
-  for y = 1, mapHeight do
-    for x = 1, mapWidth do
+  for y = 1, #tiles do
+    for x = 1, #tiles[1] do
       local tile = tiles[y][x]
-      love.graphics.draw(tileSheet, tileSets[tileSet][tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+      love.graphics.draw(tileSheet, tileSets[tileSet][tile.id], 
+        (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
       
       -- if the tile has the topper flag, draw the topper sprite on top of it
       if tile.topper then
-        love.graphics.draw(topperSheet, topperSets[topperSet][TOPPER], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+        love.graphics.draw(topperSheet, topperSets[topperSet][TILE_ID_TOPPER], 
+          (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
       end
     end
   end
@@ -217,54 +205,4 @@ function love.draw()
     CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
 
   push:finish()
-end
-
-function generateLevel()
-  local tiles = {}
-  
-  -- create 2D table full of sky transparent tiles, so we can just change tiles as needed
-  for y = 1, mapHeight do
-    table.insert(tiles, {})
-    
-    for x = 1, mapWidth do
-      -- keep IDs for whatever quad we want to render
-      table.insert(tiles[y], {
-          id = SKY,
-          topper = false
-      })
-    end
-  end
-  
-  -- iterate over X at the top level to generate the level in columns instead of rows
-  for x = 1, mapWidth do
-    -- 15% random chance to skip this column; i.e. a chasm
-    if math.random(100) < 15 then
-      -- workaround for lua missing the 'continue' statement
-      goto continue
-    end
-    
-    -- 15% random chance for a pillar
-    local spawnPillar = math.random(100) < 15
-    
-    if spawnPillar then
-      for y = 5, 6 do
-        tiles[y][x] = {
-          id = GROUND,
-          topper = y == 5 and true or false
-        }
-      end
-    end
-  
-    -- always generate ground
-    for y = TOP_GROUND_TILE_Y, mapHeight do
-      tiles[y][x] = {
-        id = GROUND,
-        topper = (not spawnPillar and y == TOP_GROUND_TILE_Y) and true or false
-      }
-    end
-    
-    ::continue::
-  end
-  
-  return tiles
 end
