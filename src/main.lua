@@ -6,12 +6,8 @@ local WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 local VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 256, 144
 local GAME_TITLE = 'Alien vs Snails'
 local FONT_SIZE = 16
-local CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 
 local CAMERA_SCROLL_SPEED = 40
-local CHARACTER_MOVE_SPEED = 40
-local JUMP_VELOCITY = -200
-local GRAVITY = 7
 
 local playerOrientation = 'right'
 local tiles = {}
@@ -23,33 +19,28 @@ function love.load()
   
   math.randomseed(os.time())
   
-  -- player character texture
-  playerSheet = love.graphics.newImage('graphics/character.png')
-  playerQuads = GenerateQuads(playerSheet, CHARACTER_WIDTH, CHARACTER_HEIGHT)
-  
-  -- place character in the middle of the screen, above the top ground tile
-  playerX = VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
-  playerY = ((TOP_GROUND_TILE_Y - 1) * TILE_SIZE) - CHARACTER_HEIGHT
-  
   -- player animations
   playerIdle = Animation {
-    frames = { playerQuads[1] },
+    frames = { FRAMES['green-alien'][1] },
     interval = 1
   }
   playerMoving = Animation {
-    frames = { playerQuads[10], playerQuads[11] },
+    frames = { FRAMES['green-alien'][10], FRAMES['green-alien'][11] },
     interval = 0.2
   }
   playerJump = Animation {
-    frames = { playerQuads[3] },
+    frames = { FRAMES['green-alien'][3] },
     interval = 1
   }
   
-  playerAnimation = playerIdle
+  player = Player({
+      x = 0, y = 0,
+      width = CHARACTER_WIDTH,
+      height = CHARACTER_HEIGHT,
+      texture = 'green-alien',
+      animation = playerIdle
+  })
     
-  -- player vertical velocity
-  playerDY = 0
-  
   -- offset that will be used to translate the scene to emulate a camera
   cameraScroll = 0
   
@@ -75,58 +66,40 @@ function love.load()
 end
 
 function love.update(dt)
-  -- apply velocity to character
-  playerDY = playerDY + GRAVITY
-  playerY = playerY + playerDY * dt
-  
-  -- if the player goes below the map limit, set its velocity to 0
-  -- since collision detection is not implemented yet
-  if playerY > (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - CHARACTER_HEIGHT then
-    playerY = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - CHARACTER_HEIGHT
-    playerDY = 0
-  end
-  
-  -- update the animation so it scrolls through the right frames
-  playerAnimation:update(dt)
-  
   -- exit if esc is pressed
   if love.keyboard.keysPressed['escape'] then
     love.event.quit()
   end
   
   -- jump
-  if love.keyboard.keysPressed['space'] and playerDY == 0 then
-    playerDY = JUMP_VELOCITY
-    playerAnimation = playerJump
-  end
-  
-  -- randomize tile set and topper set by pressing r
-  if love.keyboard.keysPressed['r'] then
-    tileSet = math.random(#tileSets)
-    topperSet = math.random(#topperSets)
+  if love.keyboard.keysPressed['space'] and player.dy == 0 then
+    player.dy = JUMP_VELOCITY
+    player.animation = playerJump
   end
   
   -- move
   if love.keyboard.isDown('left') then
-    if playerDY == 0 then
-      playerAnimation = playerMoving
+    if player.dy == 0 then
+      player.animation = playerMoving
     end
-    playerOrientation = 'left'
-    playerX = playerX - CHARACTER_MOVE_SPEED * dt
+    player.orientation = 'left'
+    player.x = player.x - CHARACTER_MOVE_SPEED * dt
   elseif love.keyboard.isDown('right') then
-    if playerDY == 0 then
-      playerAnimation = playerMoving
+    if player.dy == 0 then
+      player.animation = playerMoving
     end
-    playerOrientation = 'right'
-    playerX = playerX + CHARACTER_MOVE_SPEED * dt
+    player.orientation = 'right'
+    player.x = player.x + CHARACTER_MOVE_SPEED * dt
   else
-    if playerDY == 0 then
-      playerAnimation = playerIdle
+    if player.dy == 0 then
+      player.animation = playerIdle
     end
   end
   
+  player:update(dt)
+  
   -- set the camera's left edge to half the screen to the left of the player's x coordinate
-  cameraScroll = playerX - (VIRTUAL_WIDTH / 2) + (CHARACTER_WIDTH / 2)
+  cameraScroll = player.x - (VIRTUAL_WIDTH / 2) + (player.width / 2)
   
   love.keyboard.keysPressed = {}
 end
@@ -153,15 +126,8 @@ function love.draw()
   
   tiles:render()
   
-  -- draw animated player character
-  playerAnimation:draw(
-    playerSheet, 
-    -- shift the character half its width and height, since the origin must be at the sprite's center
-    math.floor(playerX + CHARACTER_WIDTH / 2), 
-    math.floor(playerY + CHARACTER_HEIGHT / 2),
-    0, playerOrientation == 'left' and -1 or 1, 1,
-    -- set origin to the sprite center (to allow reversing it through negative scaling)
-    CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
+  -- draw animated player
+  player:render()
 
   push:finish()
 end

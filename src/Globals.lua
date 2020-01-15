@@ -4,7 +4,9 @@ push = require 'libs.push'
 
 -- general purpose / utility
 require 'Animation'
+require 'Entity'
 require 'LevelMaker'
+require 'Player'
 require 'Tile'
 require 'TileMap'
 require 'Util'
@@ -33,17 +35,27 @@ TOPPER_SETS_WIDE = 6
 TOPPER_SETS_TALL = 18
 
 -- sprite pixels
+CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 TILE_SIZE = 16
+
+-- physics for the player character
+CHARACTER_MOVE_SPEED = 40
+JUMP_VELOCITY = -200
+GRAVITY = 7
 
 -- resources
 TEXTURES = {
   ['tiles'] = love.graphics.newImage('graphics/tiles.png'),
-  ['toppers'] = love.graphics.newImage('graphics./tile_tops.png')
+  ['toppers'] = love.graphics.newImage('graphics./tile_tops.png'),
+  ['blue-alien'] = love.graphics.newImage('graphics/blue_alien.png'),
+  ['green-alien'] = love.graphics.newImage('graphics/green_alien.png'),
+  ['pink-alien'] = love.graphics.newImage('graphics/pink_alien.png')
 }
 
 FRAMES = {
   ['tiles'] = GenerateQuads(TEXTURES['tiles'], TILE_SIZE, TILE_SIZE),
-  ['toppers'] = GenerateQuads(TEXTURES['toppers'], TILE_SIZE, TILE_SIZE)
+  ['toppers'] = GenerateQuads(TEXTURES['toppers'], TILE_SIZE, TILE_SIZE),
+  ['green-alien'] = GenerateQuads(TEXTURES['green-alien'], CHARACTER_WIDTH, CHARACTER_HEIGHT) 
 }
 
 -- these need to be added after FRAMES is initialized because they refer to it from within
