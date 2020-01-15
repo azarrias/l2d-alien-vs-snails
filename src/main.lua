@@ -6,20 +6,7 @@ local WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
 local VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 256, 144
 local GAME_TITLE = 'Alien vs Snails'
 local FONT_SIZE = 16
-local TILE_SIZE = 16
 local CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
-
--- number of tiles in each tile set
-local TILE_SET_WIDTH = 5
-local TILE_SET_HEIGHT = 4
-
--- number of tile sets in sheet
-local TILE_SETS_WIDE = 6
-local TILE_SETS_TALL = 10
-
--- number of topper sets in sheet
-local TOPPER_SETS_WIDE = 6
-local TOPPER_SETS_TALL = 18
 
 local CAMERA_SCROLL_SPEED = 40
 local CHARACTER_MOVE_SPEED = 40
@@ -35,22 +22,6 @@ function love.load()
   end
   
   math.randomseed(os.time())
-  
-  -- load tiles from tilesheet image and generate quads for it
-  tileSheet = love.graphics.newImage('graphics/tiles.png')
-  quads = GenerateQuads(tileSheet, TILE_SIZE, TILE_SIZE)  
-  
-  topperSheet = love.graphics.newImage('graphics/tile_tops.png')
-  topperQuads = GenerateQuads(topperSheet, TILE_SIZE, TILE_SIZE)  
-  
-  -- subdivide quad tables into tile sets
-  -- (there are multiple tile sets within these sprite sheets)
-  tileSets = GenerateTileSets(quads, TILE_SETS_WIDE, TILE_SETS_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
-  topperSets = GenerateTileSets(topperQuads, TOPPER_SETS_WIDE, TOPPER_SETS_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
-  
-  -- randomize tile set and topper set for the level
-  tileSet = math.random(#tileSets)
-  topperSet = math.random(#topperSets)
   
   -- player character texture
   playerSheet = love.graphics.newImage('graphics/character.png')
@@ -180,19 +151,7 @@ function love.draw()
   love.graphics.translate(-math.floor(cameraScroll), 0)
   love.graphics.clear(backgroundR, backgroundG, backgroundB, 1)
   
-  for y = 1, #tiles do
-    for x = 1, #tiles[1] do
-      local tile = tiles[y][x]
-      love.graphics.draw(tileSheet, tileSets[tileSet][tile.id], 
-        (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
-      
-      -- if the tile has the topper flag, draw the topper sprite on top of it
-      if tile.topper then
-        love.graphics.draw(topperSheet, topperSets[topperSet][TILE_ID_TOPPER], 
-          (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
-      end
-    end
-  end
+  tiles:render()
   
   -- draw animated player character
   playerAnimation:draw(
