@@ -40,7 +40,7 @@ function love.load()
       texture = 'green-alien',
       animation = playerIdle
   })
-    
+
   -- offset that will be used to translate the scene to emulate a camera
   cameraScroll = 0
   
@@ -48,7 +48,8 @@ function love.load()
   backgroundG = math.random()
   backgroundB = math.random()
   
-  tiles = LevelMaker.create(100, 10)
+  gameLevel = LevelMaker.create(100, 10)
+  gameLevel:spawnEnemies()
   
   -- Set up window
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -124,7 +125,7 @@ function love.draw()
   love.graphics.translate(-math.floor(cameraScroll), 0)
   love.graphics.clear(backgroundR, backgroundG, backgroundB, 1)
   
-  tiles:render()
+  gameLevel:render()
   
   -- draw animated player
   player:render()

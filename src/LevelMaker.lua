@@ -42,6 +42,8 @@ function LevelMaker.create(width, height)
     ::continue::
   end
   
-  return TileMap(tiles)
+  local tileMap = TileMap(tiles)
+  
+  return GameLevel(tileMap)
 end
   

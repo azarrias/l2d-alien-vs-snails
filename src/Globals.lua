@@ -5,8 +5,10 @@ push = require 'libs.push'
 -- general purpose / utility
 require 'Animation'
 require 'Entity'
+require 'GameLevel'
 require 'LevelMaker'
 require 'Player'
+require 'Snail'
 require 'Tile'
 require 'TileMap'
 require 'Util'
@@ -36,6 +38,7 @@ TOPPER_SETS_TALL = 18
 
 -- sprite pixels
 CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
+CREATURE_WIDTH, CREATURE_HEIGHT = 16, 16
 TILE_SIZE = 16
 
 -- physics for the player character
@@ -49,13 +52,15 @@ TEXTURES = {
   ['toppers'] = love.graphics.newImage('graphics./tile_tops.png'),
   ['blue-alien'] = love.graphics.newImage('graphics/blue_alien.png'),
   ['green-alien'] = love.graphics.newImage('graphics/green_alien.png'),
-  ['pink-alien'] = love.graphics.newImage('graphics/pink_alien.png')
+  ['pink-alien'] = love.graphics.newImage('graphics/pink_alien.png'),
+  ['creatures'] = love.graphics.newImage('graphics/creatures.png')
 }
 
 FRAMES = {
   ['tiles'] = GenerateQuads(TEXTURES['tiles'], TILE_SIZE, TILE_SIZE),
   ['toppers'] = GenerateQuads(TEXTURES['toppers'], TILE_SIZE, TILE_SIZE),
-  ['green-alien'] = GenerateQuads(TEXTURES['green-alien'], CHARACTER_WIDTH, CHARACTER_HEIGHT) 
+  ['green-alien'] = GenerateQuads(TEXTURES['green-alien'], CHARACTER_WIDTH, CHARACTER_HEIGHT),
+  ['creatures'] = GenerateQuads(TEXTURES['creatures'], CREATURE_WIDTH, CREATURE_HEIGHT)
 }
 
 -- these need to be added after FRAMES is initialized because they refer to it from within
