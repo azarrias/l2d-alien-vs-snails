@@ -27,7 +27,7 @@ end
 function GameLevel:spawnEnemies()
   -- spawn snails in the level
   -- check for each column if there is a ground tile
-  -- if one is found, there is a 5% chance of spawning a snail on that column
+  -- if one is found, there is a 10% chance of spawning a snail on that column
   for x = 1, self.tileMap.width do
     
     local groundFound = false
@@ -46,11 +46,19 @@ function GameLevel:spawnEnemies()
               x = (x - 1) * TILE_SIZE,
               y = (y - 2) * TILE_SIZE,
               width = CREATURE_WIDTH,
-              height = CREATURE_HEIGHT
+              height = CREATURE_HEIGHT,
+              stateMachine = StateMachine {
+                ['idle'] = function() return SnailStateIdle(snail) end
+              }
             }
+            
+            snail:changeState('idle')
             
             table.insert(self.entities, snail)
           end
+          
+          -- once that ground has been found and processed, we can skip the rest of the column
+          break
         end
       end
     end

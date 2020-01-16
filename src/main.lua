@@ -19,27 +19,20 @@ function love.load()
   
   math.randomseed(os.time())
   
-  -- player animations
-  playerIdle = Animation {
-    frames = { FRAMES['green-alien'][1] },
-    interval = 1
-  }
-  playerMoving = Animation {
-    frames = { FRAMES['green-alien'][10], FRAMES['green-alien'][11] },
-    interval = 0.2
-  }
-  playerJump = Animation {
-    frames = { FRAMES['green-alien'][3] },
-    interval = 1
-  }
-  
   player = Player({
       x = 0, y = 0,
       width = CHARACTER_WIDTH,
       height = CHARACTER_HEIGHT,
       texture = 'green-alien',
-      animation = playerIdle
+      stateMachine = StateMachine {
+        ['idle'] = function() return PlayerStateIdle(player) end,
+        ['moving'] = function() return PlayerStateMoving(player) end,
+        ['jumping'] = function() return PlayerStateJumping(player, GRAVITY) end,
+        ['falling'] = function() return PlayerStateFalling(player, GRAVITY) end
+      }
   })
+
+  player:changeState('falling')
 
   -- offset that will be used to translate the scene to emulate a camera
   cameraScroll = 0
@@ -70,31 +63,6 @@ function love.update(dt)
   -- exit if esc is pressed
   if love.keyboard.keysPressed['escape'] then
     love.event.quit()
-  end
-  
-  -- jump
-  if love.keyboard.keysPressed['space'] and player.dy == 0 then
-    player.dy = JUMP_VELOCITY
-    player.animation = playerJump
-  end
-  
-  -- move
-  if love.keyboard.isDown('left') then
-    if player.dy == 0 then
-      player.animation = playerMoving
-    end
-    player.orientation = 'left'
-    player.x = player.x - CHARACTER_MOVE_SPEED * dt
-  elseif love.keyboard.isDown('right') then
-    if player.dy == 0 then
-      player.animation = playerMoving
-    end
-    player.orientation = 'right'
-    player.x = player.x + CHARACTER_MOVE_SPEED * dt
-  else
-    if player.dy == 0 then
-      player.animation = playerIdle
-    end
   end
   
   player:update(dt)

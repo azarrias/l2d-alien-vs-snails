@@ -4,11 +4,18 @@ push = require 'libs.push'
 
 -- general purpose / utility
 require 'Animation'
+require 'BaseState'
 require 'Entity'
 require 'GameLevel'
 require 'LevelMaker'
 require 'Player'
+require 'PlayerStateFalling'
+require 'PlayerStateIdle'
+require 'PlayerStateJumping'
+require 'PlayerStateMoving'
 require 'Snail'
+require 'SnailStateIdle'
+require 'StateMachine'
 require 'Tile'
 require 'TileMap'
 require 'Util'
@@ -42,9 +49,9 @@ CREATURE_WIDTH, CREATURE_HEIGHT = 16, 16
 TILE_SIZE = 16
 
 -- physics for the player character
-CHARACTER_MOVE_SPEED = 40
-JUMP_VELOCITY = -200
-GRAVITY = 7
+PLAYER_MOVE_SPEED = 40
+PLAYER_JUMP_VELOCITY = -200
+GRAVITY = 6
 
 -- resources
 TEXTURES = {

@@ -11,7 +11,7 @@ function Entity:init(def)
   self.height = def.height
   
   self.texture = def.texture
-  self.animation = def.animation
+  self.stateMachine = def.stateMachine
   self.orientation = 'left'
   
   -- references to game level to check for collisions
@@ -19,25 +19,17 @@ function Entity:init(def)
   self.level = def.level
 end
 
+function Entity:changeState(state, params)
+  self.stateMachine:change(state, params)
+end
+
 function Entity:update(dt)
-  -- apply velocity to character
-  self.dy = self.dy + GRAVITY
-  self.y = self.y + self.dy * dt
-  
-  -- if the player goes below the map limit, set its velocity to 0
-  -- since collision detection is not implemented yet
-  if self.y > (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - self.height then
-    self.y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - self.height
-    self.dy = 0
-  end
-  
-  -- update the animation so it scrolls through the right frames
-  self.animation:update(dt)
+  self.stateMachine:update(dt)
 end
 
 function Entity:render()
   -- draw animated entity
-  self.animation:draw(
+  self.stateMachine.current.animation:draw(
     TEXTURES[self.texture], 
     -- shift the character half its width and height, since the origin must be at the sprite's center
     math.floor(self.x) + self.width / 2, 
