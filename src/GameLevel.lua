@@ -41,18 +41,22 @@ function GameLevel:spawnEnemies()
             
             -- instantiate snail, must declare it first so it can be passed into the state machine
             local snail
-            snail = Snail {
+            snail = Snail({
               texture = 'creatures',
               x = (x - 1) * TILE_SIZE,
               y = (y - 2) * TILE_SIZE,
               width = CREATURE_WIDTH,
               height = CREATURE_HEIGHT,
               stateMachine = StateMachine {
-                ['idle'] = function() return SnailStateIdle(snail) end
-              }
-            }
+                ['idle'] = function() return SnailStateIdle(snail) end,
+                ['moving'] = function() return SnailStateMoving(snail) end
+              },
+              spriteOrientation = 'left'
+            })
             
-            snail:changeState('idle')
+            snail:changeState('idle', {
+              wait = math.random(5)
+            })
             
             table.insert(self.entities, snail)
           end

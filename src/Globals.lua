@@ -15,6 +15,7 @@ require 'PlayerStateJumping'
 require 'PlayerStateMoving'
 require 'Snail'
 require 'SnailStateIdle'
+require 'SnailStateMoving'
 require 'StateMachine'
 require 'Tile'
 require 'TileMap'
@@ -48,10 +49,11 @@ CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 CREATURE_WIDTH, CREATURE_HEIGHT = 16, 16
 TILE_SIZE = 16
 
--- physics for the player character
+-- physics for entities
+GRAVITY = 6
 PLAYER_MOVE_SPEED = 40
 PLAYER_JUMP_VELOCITY = -200
-GRAVITY = 6
+SNAIL_MOVE_SPEED = 10
 
 -- resources
 TEXTURES = {

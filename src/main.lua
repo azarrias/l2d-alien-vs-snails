@@ -29,7 +29,8 @@ function love.load()
         ['moving'] = function() return PlayerStateMoving(player) end,
         ['jumping'] = function() return PlayerStateJumping(player, GRAVITY) end,
         ['falling'] = function() return PlayerStateFalling(player, GRAVITY) end
-      }
+      },
+      spriteOrientation = 'right'
   })
 
   player:changeState('falling')
@@ -65,6 +66,7 @@ function love.update(dt)
     love.event.quit()
   end
   
+  gameLevel:update(dt)
   player:update(dt)
   
   -- set the camera's left edge to half the screen to the left of the player's x coordinate
