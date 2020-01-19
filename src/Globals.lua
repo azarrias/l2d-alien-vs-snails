@@ -5,6 +5,7 @@ push = require 'libs.push'
 -- general purpose / utility
 require 'Animation'
 require 'BaseState'
+require 'Collider'
 require 'Entity'
 require 'GameLevel'
 require 'LevelMaker'

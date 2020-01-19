@@ -23,4 +23,6 @@ function PlayerStateIdle:update(dt)
       self.player:changeState('moving')
     end
   end
+  
+  self.player.collider:setTo(self.player.x, self.player.y)
 end

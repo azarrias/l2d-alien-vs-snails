@@ -33,4 +33,6 @@ function PlayerStateJumping:update(dt)
     self.player.orientation = 'right'
     self.player.x = self.player.x + PLAYER_MOVE_SPEED * dt
   end
+  
+  self.player.collider:setTo(self.player.x, self.player.y)
 end

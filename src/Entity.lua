@@ -19,6 +19,8 @@ function Entity:init(def)
   -- references to game level to check for collisions
   self.map = def.map
   self.level = def.level
+  
+  self.collider = def.collider
 end
 
 function Entity:changeState(state, params)
@@ -39,4 +41,9 @@ function Entity:render()
     0, self.orientation == self.spriteOrientation and 1 or -1, 1,
     -- set origin to the sprite center (to allow reversing it through negative scaling)
     self.width / 2, self.height / 2)
+  
+  -- draw collider rect
+  if self.collider then
+    self.collider:render()
+  end
 end

@@ -30,7 +30,13 @@ function love.load()
         ['jumping'] = function() return PlayerStateJumping(player, GRAVITY) end,
         ['falling'] = function() return PlayerStateFalling(player, GRAVITY) end
       },
-      spriteOrientation = 'right'
+      spriteOrientation = 'right',
+      collider = Collider {
+        x = 0, y = 0,
+        localX = 1, localY = 3,
+        width = CHARACTER_WIDTH - 2,
+        height = CHARACTER_HEIGHT - 3
+      }
   })
 
   player:changeState('falling')

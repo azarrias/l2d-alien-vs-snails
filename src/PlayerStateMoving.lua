@@ -29,4 +29,6 @@ function PlayerStateMoving:update(dt)
   if love.keyboard.keysPressed['space'] and player.dy == 0 then
     self.player:changeState('jumping')
   end
+  
+  self.player.collider:setTo(self.player.x, self.player.y)
 end
