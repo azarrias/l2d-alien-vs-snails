@@ -19,6 +19,16 @@ function love.load()
   
   math.randomseed(os.time())
   
+  -- offset that will be used to translate the scene to emulate a camera
+  cameraScroll = 0
+  
+  backgroundR = math.random()
+  backgroundG = math.random()
+  backgroundB = math.random()
+  
+  gameLevel = LevelMaker.create(100, 10)
+  gameLevel:spawnEnemies()
+  
   player = Player({
       x = 0, y = 0,
       width = CHARACTER_WIDTH,
@@ -31,25 +41,16 @@ function love.load()
         ['falling'] = function() return PlayerStateFalling(player, GRAVITY) end
       },
       spriteOrientation = 'right',
+      level = gameLevel,
       collider = Collider {
         x = 0, y = 0,
-        localX = 1, localY = 3,
-        width = CHARACTER_WIDTH - 2,
-        height = CHARACTER_HEIGHT - 3
+        localX = 3, localY = 2,
+        width = CHARACTER_WIDTH - 6,
+        height = CHARACTER_HEIGHT - 2
       }
   })
 
   player:changeState('falling')
-
-  -- offset that will be used to translate the scene to emulate a camera
-  cameraScroll = 0
-  
-  backgroundR = math.random()
-  backgroundG = math.random()
-  backgroundB = math.random()
-  
-  gameLevel = LevelMaker.create(100, 10)
-  gameLevel:spawnEnemies()
   
   -- Set up window
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {

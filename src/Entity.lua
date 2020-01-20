@@ -17,7 +17,6 @@ function Entity:init(def)
   self.orientation = 'left'
   
   -- references to game level to check for collisions
-  self.map = def.map
   self.level = def.level
   
   self.collider = def.collider
