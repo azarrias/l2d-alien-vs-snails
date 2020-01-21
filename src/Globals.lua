@@ -33,6 +33,11 @@ TILE_ID_EMPTY = 5 -- transparent sprite
 TILE_ID_GROUND = 13
 TILE_ID_TOPPER = 3
 
+-- table of tile IDs that should trigger a collision
+COLLIDABLE_TILES = {
+    TILE_ID_GROUND
+}
+
 -- number of tiles in each tile set
 TILE_SET_WIDTH = 5
 TILE_SET_HEIGHT = 4

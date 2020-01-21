@@ -23,3 +23,16 @@ function Tile:render()
         (self.x - 1) * self.width, (self.y - 1) * self.height)
   end
 end
+
+--[[
+    Checks to see whether this ID is whitelisted as collidable in a global constants table.
+]]
+function Tile:collidable(target)
+    for k, v in pairs(COLLIDABLE_TILES) do
+        if v == self.id then
+            return true
+        end
+    end
+
+    return false
+end

@@ -27,7 +27,7 @@ end
 function GameLevel:spawnEnemies()
   -- spawn snails in the level
   -- check for each column if there is a ground tile
-  -- if one is found, there is a 10% chance of spawning a snail on that column
+  -- if one is found, there is a 5% chance of spawning a snail on that column
   for x = 1, self.tileMap.width do
     
     local groundFound = false
@@ -37,7 +37,7 @@ function GameLevel:spawnEnemies()
         if self.tileMap.tiles[y][x].id == TILE_ID_GROUND then
           groundFound = true
           
-          if math.random(10) == 1 then
+          if math.random(20) == 1 then
             
             -- instantiate snail, must declare it first so it can be passed into the state machine
             local snail
