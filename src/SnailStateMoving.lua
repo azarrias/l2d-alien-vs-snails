@@ -14,6 +14,19 @@ function SnailStateMoving:init(snail)
   self.movingTimer = 0
 end
 
+function SnailStateMoving:enter(params)
+  local colliderOffsetX = 1
+  local colliderOffsetY = 5
+  self.snail.collider:setTo(
+    self.snail.x,
+    self.snail.y,
+    colliderOffsetX,
+    colliderOffsetY,
+    CREATURE_WIDTH - colliderOffsetX * 2,
+    CREATURE_HEIGHT - colliderOffsetY
+  )
+end
+
 function SnailStateMoving:update(dt)
   self.movingTimer = self.movingTimer + dt
   self.snail.animation:update(dt)

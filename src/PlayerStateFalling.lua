@@ -78,6 +78,4 @@ function PlayerStateFalling:update(dt)
       self.player.x = (collidingTiles[1].x - 1) * TILE_SIZE - self.player.width
     end
   end
-  
-  self.player.collider:setTo(self.player.x, self.player.y)  
 end

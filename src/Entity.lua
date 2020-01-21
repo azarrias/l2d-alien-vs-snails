@@ -28,6 +28,10 @@ end
 
 function Entity:update(dt)
   self.stateMachine:update(dt)
+  
+  if self.collider then
+    self.collider:setTo(self.x, self.y)
+  end
 end
 
 function Entity:render()

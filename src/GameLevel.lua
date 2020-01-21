@@ -51,7 +51,16 @@ function GameLevel:spawnEnemies()
                 ['idle'] = function() return SnailStateIdle(snail) end,
                 ['moving'] = function() return SnailStateMoving(snail) end
               },
-              spriteOrientation = 'left'
+              spriteOrientation = 'left',
+              level = gameLevel,
+              collider = Collider {
+                x = (x - 1) * TILE_SIZE, 
+                y = (y - 2) * TILE_SIZE,
+                localX = 3, 
+                localY = 6,
+                width = CREATURE_WIDTH - 6,
+                height = CREATURE_HEIGHT - 6
+              }
             })
             
             snail:changeState('idle', {
