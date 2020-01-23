@@ -37,13 +37,35 @@ function SnailStateMoving:update(dt)
         wait = math.random(5)
       })
     else
-      self.snail.direction = math.random(2) == 1 and 'left' or 'right'
+      self.snail.orientation = math.random(2) == 1 and 'left' or 'right'
       self.movingPeriod = math.random(5)
       self.movingTimer = 0
     end
   elseif self.snail.orientation == 'left' then
     self.snail.x = self.snail.x - SNAIL_MOVE_SPEED * dt
-  else
+    
+    local tileLeftTop = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'left-top')
+    local tileLeftBottom = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'left-bottom')
+    
+    -- if there are no tiles below or a solid tile on the current direction, turn around and go
+    if tileLeftTop or not tileLeftBottom then
+      self.snail.x = self.snail.x + SNAIL_MOVE_SPEED * dt
+      self.snail.orientation = 'right'
+      self.movingPeriod = math.random(5)
+      self.movingTimer = 0
+    end
+  elseif self.snail.orientation == 'right' then
     self.snail.x = self.snail.x + SNAIL_MOVE_SPEED * dt
+    
+    local tileRightTop = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'right-top')
+    local tileRightBottom = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'right-bottom')
+    
+    -- if there are no tiles below or a solid tile on the current direction, turn around and go
+    if tileRightTop or not tileRightBottom then
+      self.snail.x = self.snail.x - SNAIL_MOVE_SPEED * dt
+      self.snail.orientation = 'left'
+      self.movingPeriod = math.random(5)
+      self.movingTimer = 0
+    end
   end
 end

@@ -30,34 +30,25 @@ function Collider:render()
 end
 
 function Collider:checkTileCollisions(dt, tilemap, direction)
-  local collidableTiles, tile1, tile2 = {}
-  
+  local tile
   local leftX = self.x + self.localX
   local rightX = self.x + self.localX + self.width
   local topY = self.y + self.localY
   local bottomY = self.y + self.localY + self.height
   
-  if direction == 'below' then
-    tile1 = tilemap:pointToTile(leftX, bottomY)
-    tile2 = tilemap:pointToTile(rightX, bottomY)
-  elseif direction == 'above' then
-    tile1 = tilemap:pointToTile(leftX, topY)
-    tile2 = tilemap:pointToTile(rightX, topY)
-  elseif direction == 'left' then
-    tile1 = tilemap:pointToTile(leftX, topY)
-    tile2 = tilemap:pointToTile(leftX, bottomY)
-  elseif direction == 'right' then
-    tile1 = tilemap:pointToTile(rightX, topY)
-    tile2 = tilemap:pointToTile(rightX, bottomY)
+  if direction == 'left-top' then
+    tile = tilemap:pointToTile(leftX, topY)
+  elseif direction == 'right-top' then
+    tile = tilemap:pointToTile(rightX, topY)
+  elseif direction == 'left-bottom' then
+    tile = tilemap:pointToTile(leftX, bottomY)
+  elseif direction == 'right-bottom' then
+    tile = tilemap:pointToTile(rightX, bottomY)
   end
-
-  if tile1 and tile1:collidable() then
-    table.insert(collidableTiles, tile1)
+  
+  if tile and tile:collidable() then
+    return tile
+  else
+    return nil
   end
-    
-  if tile2 and tile2 ~= tile1 and tile2:collidable() then
-    table.insert(collidableTiles, tile2)
-  end
-
-  return collidableTiles
 end

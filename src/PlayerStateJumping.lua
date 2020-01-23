@@ -41,7 +41,8 @@ function PlayerStateJumping:update(dt)
   end
   
   -- check the tiles above the player's head
-  local collidingTiles = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'above')
+  local tileLeftTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-top')
+  local tileRightTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-top')
  
   -- widen the collider for sideways collisions, to avoid the 'above' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
@@ -57,7 +58,7 @@ function PlayerStateJumping:update(dt)
   )
   
   -- if there are collidable tiles above, go to falling state
-  if #collidingTiles > 0 then
+  if tileLeftTop or tileRightTop then
     self.player.dy = 0
     self.player:changeState('falling')
     
@@ -65,19 +66,23 @@ function PlayerStateJumping:update(dt)
   elseif love.keyboard.isDown('left') then
     self.player.orientation = 'left'
     self.player.x = self.player.x - PLAYER_MOVE_SPEED * dt
-    collidingTiles = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, self.player.orientation)
+    tileLeftTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-top')
+    local tileLeftBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
     
-    if #collidingTiles > 0 then
-      self.player.x = (collidingTiles[1].x - 1) * TILE_SIZE + collidingTiles[1].width - 1
+    if tileLeftTop or tileLeftBottom then
+      local tile = tileLeftTop ~= nil and tileLeftTop or tileLeftBottom
+      self.player.x = (tile.x - 1) * TILE_SIZE + tile.width - 1
     end
       
   elseif love.keyboard.isDown('right') then
     self.player.orientation = 'right'
     self.player.x = self.player.x + PLAYER_MOVE_SPEED * dt
-    collidingTiles = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, self.player.orientation)
+    tileRightTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-top')
+    local tileLeftBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
     
-    if #collidingTiles > 0 then
-      self.player.x = (collidingTiles[1].x - 1) * TILE_SIZE - self.player.width
+    if tileRightTop or tileRightBottom then
+      local tile = tileRightTop ~= nil and tileRightTop or tileRightBottom
+      self.player.x = (tile.x - 1) * TILE_SIZE - self.player.width
     end
   end
 end
