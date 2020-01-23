@@ -70,7 +70,8 @@ TEXTURES = {
   ['green-alien'] = love.graphics.newImage('graphics/green_alien.png'),
   ['pink-alien'] = love.graphics.newImage('graphics/pink_alien.png'),
   ['creatures'] = love.graphics.newImage('graphics/creatures.png'),
-  ['bushes'] = love.graphics.newImage('graphics/bushes_and_cacti.png')
+  ['bushes'] = love.graphics.newImage('graphics/bushes_and_cacti.png'),
+  ['jump-blocks'] = love.graphics.newImage('graphics/jump_blocks.png')
 }
 
 FRAMES = {
@@ -78,7 +79,8 @@ FRAMES = {
   ['toppers'] = GenerateQuads(TEXTURES['toppers'], TILE_SIZE, TILE_SIZE),
   ['green-alien'] = GenerateQuads(TEXTURES['green-alien'], CHARACTER_WIDTH, CHARACTER_HEIGHT),
   ['creatures'] = GenerateQuads(TEXTURES['creatures'], CREATURE_WIDTH, CREATURE_HEIGHT),
-  ['bushes'] = GenerateQuads(TEXTURES['bushes'], TILE_SIZE, TILE_SIZE)
+  ['bushes'] = GenerateQuads(TEXTURES['bushes'], TILE_SIZE, TILE_SIZE),
+  ['jump-blocks'] = GenerateQuads(TEXTURES['jump-blocks'], TILE_SIZE, TILE_SIZE)
 }
 
 -- these need to be added after FRAMES is initialized because they refer to it from within
@@ -92,3 +94,8 @@ FRAMES['toppersets'] = GenerateTileSets(FRAMES['toppers'],
 BUSH_IDS = {
     1, 2, 5, 6, 7
 }
+
+JUMP_BLOCK_IDS = {}
+for i = 1, 30 do
+  table.insert(JUMP_BLOCK_IDS, i)
+end
