@@ -8,6 +8,7 @@ require 'BaseState'
 require 'Collider'
 require 'Entity'
 require 'GameLevel'
+require 'GameObject'
 require 'LevelMaker'
 require 'Player'
 require 'PlayerStateFalling'
@@ -68,14 +69,16 @@ TEXTURES = {
   ['blue-alien'] = love.graphics.newImage('graphics/blue_alien.png'),
   ['green-alien'] = love.graphics.newImage('graphics/green_alien.png'),
   ['pink-alien'] = love.graphics.newImage('graphics/pink_alien.png'),
-  ['creatures'] = love.graphics.newImage('graphics/creatures.png')
+  ['creatures'] = love.graphics.newImage('graphics/creatures.png'),
+  ['bushes'] = love.graphics.newImage('graphics/bushes_and_cacti.png')
 }
 
 FRAMES = {
   ['tiles'] = GenerateQuads(TEXTURES['tiles'], TILE_SIZE, TILE_SIZE),
   ['toppers'] = GenerateQuads(TEXTURES['toppers'], TILE_SIZE, TILE_SIZE),
   ['green-alien'] = GenerateQuads(TEXTURES['green-alien'], CHARACTER_WIDTH, CHARACTER_HEIGHT),
-  ['creatures'] = GenerateQuads(TEXTURES['creatures'], CREATURE_WIDTH, CREATURE_HEIGHT)
+  ['creatures'] = GenerateQuads(TEXTURES['creatures'], CREATURE_WIDTH, CREATURE_HEIGHT),
+  ['bushes'] = GenerateQuads(TEXTURES['bushes'], TILE_SIZE, TILE_SIZE)
 }
 
 -- these need to be added after FRAMES is initialized because they refer to it from within
@@ -84,3 +87,8 @@ FRAMES['tilesets'] = GenerateTileSets(FRAMES['tiles'],
 
 FRAMES['toppersets'] = GenerateTileSets(FRAMES['toppers'], 
     TOPPER_SETS_WIDE, TOPPER_SETS_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
+  
+-- game object IDs that corresponds to the sprite number in the respective sprite sheet
+BUSH_IDS = {
+    1, 2, 5, 6, 7
+}

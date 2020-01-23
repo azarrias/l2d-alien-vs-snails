@@ -37,7 +37,7 @@ function PlayerStateFalling:update(dt)
   -- widen the collider for sideways collisions, to avoid the 'below' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
   colliderOffsetX = 1
-  colliderOffsetY = 3
+  colliderOffsetY = 4
   self.player.collider:setTo(
     self.player.x, 
     self.player.y, 
