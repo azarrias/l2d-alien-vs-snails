@@ -41,8 +41,7 @@ function LevelMaker.create(width, height)
     if spawnBush then
       table.insert(objects, 
         GameObject {
-          x = (x - 1) * TILE_SIZE,
-          y = ((spawnPillar and 4 or 6) - 1) * TILE_SIZE,
+          position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 4 or 6) - 1) * TILE_SIZE),
           texture = 'bushes',
           width = TILE_SIZE,
           height = TILE_SIZE,
@@ -55,8 +54,7 @@ function LevelMaker.create(width, height)
     if spawnBlock then
       table.insert(objects,
         GameObject {
-          x = (x - 1) * TILE_SIZE,
-          y = ((spawnPillar and 2 or 4) - 1) * TILE_SIZE,
+          position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 1) * TILE_SIZE),
           texture = 'jump-blocks',
           width = TILE_SIZE,
           height = TILE_SIZE,

@@ -1,11 +1,8 @@
 Entity = Class{}
 
 function Entity:init(def)
-  self.x = def.x
-  self.y = def.y
-  
-  self.dx = 0
-  self.dy = 0
+  self.position = def.position
+  self.velocity = Vector2D(0, 0)
   
   self.width = def.width
   self.height = def.height
@@ -30,7 +27,7 @@ function Entity:update(dt)
   self.stateMachine:update(dt)
   
   if self.collider then
-    self.collider:setTo(self.x, self.y)
+    self.collider:setTo(self.position)
   end
 end
 
@@ -39,8 +36,8 @@ function Entity:render()
   self.stateMachine.current.animation:draw(
     TEXTURES[self.texture], 
     -- shift the character half its width and height, since the origin must be at the sprite's center
-    math.floor(self.x) + self.width / 2, 
-    math.floor(self.y) + self.height / 2,
+    math.floor(self.position.x) + self.width / 2, 
+    math.floor(self.position.y) + self.height / 2,
     0, self.orientation == self.spriteOrientation and 1 or -1, 1,
     -- set origin to the sprite center (to allow reversing it through negative scaling)
     self.width / 2, self.height / 2)

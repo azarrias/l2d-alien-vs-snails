@@ -13,13 +13,13 @@ end
 
 function PlayerStateIdle:update(dt)
   -- jump
-  if love.keyboard.keysPressed['space'] and self.player.dy == 0 then
+  if love.keyboard.keysPressed['space'] and self.player.velocity.y == 0 then
     self.player:changeState('jumping')
   end
   
   -- move
   if love.keyboard.isDown('left') or love.keyboard.isDown('right') then
-    if self.player.dy == 0 then
+    if self.player.velocity.y == 0 then
       self.player:changeState('moving')
     end
   end

@@ -1,19 +1,15 @@
 Collider = Class{}
 
 function Collider:init(def)
-  self.x = def.x
-  self.y = def.y
-  self.localX = def.localX
-  self.localY = def.localY
+  self.position = def.position
+  self.localPosition = def.localPosition
   self.width = def.width
   self.height = def.height
 end
 
-function Collider:setTo(x, y, localX, localY, width, height)
-  self.x = x
-  self.y = y
-  self.localX = localX or self.localX
-  self.localY = localY or self.localY
+function Collider:setTo(pos, localPos, width, height)
+  self.position = pos
+  self.localPosition = localPos or self.localPosition
   self.width = width or self.width
   self.height = height or self.height
 end
@@ -22,8 +18,8 @@ function Collider:render()
   love.graphics.setColor(1, 0.6, 0.6, 0.7)
   love.graphics.rectangle(
     'fill', 
-    math.floor(self.x) + self.localX, 
-    math.floor(self.y) + self.localY, 
+    math.floor(self.position.x) + self.localPosition.x, 
+    math.floor(self.position.y) + self.localPosition.y, 
     self.width, 
     self.height
   )
@@ -31,19 +27,19 @@ end
 
 function Collider:checkTileCollisions(dt, tilemap, direction)
   local tile
-  local leftX = self.x + self.localX
-  local rightX = self.x + self.localX + self.width
-  local topY = self.y + self.localY
-  local bottomY = self.y + self.localY + self.height
   
   if direction == 'left-top' then
-    tile = tilemap:pointToTile(leftX, topY)
+    tile = tilemap:pointToTile(Vector2D(self.position.x + self.localPosition.x, 
+                                        self.position.y + self.localPosition.y))
   elseif direction == 'right-top' then
-    tile = tilemap:pointToTile(rightX, topY)
+    tile = tilemap:pointToTile(Vector2D(self.position.x + self.localPosition.x + self.width, 
+                                        self.position.y + self.localPosition.y))
   elseif direction == 'left-bottom' then
-    tile = tilemap:pointToTile(leftX, bottomY)
+    tile = tilemap:pointToTile(Vector2D(self.position.x + self.localPosition.x, 
+                                        self.position.y + self.localPosition.y + self.height))
   elseif direction == 'right-bottom' then
-    tile = tilemap:pointToTile(rightX, bottomY)
+    tile = tilemap:pointToTile(Vector2D(self.position.x + self.localPosition.x + self.width, 
+                                        self.position.y + self.localPosition.y + self.height))
   end
   
   if tile and tile:collidable() then

@@ -15,15 +15,12 @@ function SnailStateMoving:init(snail)
 end
 
 function SnailStateMoving:enter(params)
-  local colliderOffsetX = 1
-  local colliderOffsetY = 5
+  local colliderOffset = Vector2D(1, 5)
   self.snail.collider:setTo(
-    self.snail.x,
-    self.snail.y,
-    colliderOffsetX,
-    colliderOffsetY,
-    CREATURE_WIDTH - colliderOffsetX * 2,
-    CREATURE_HEIGHT - colliderOffsetY
+    self.snail.position,
+    colliderOffset,
+    CREATURE_WIDTH - colliderOffset.x * 2,
+    CREATURE_HEIGHT - colliderOffset.y
   )
 end
 
@@ -42,27 +39,27 @@ function SnailStateMoving:update(dt)
       self.movingTimer = 0
     end
   elseif self.snail.orientation == 'left' then
-    self.snail.x = self.snail.x - SNAIL_MOVE_SPEED * dt
+    self.snail.position.x = self.snail.position.x - SNAIL_MOVE_SPEED * dt
     
     local tileLeftTop = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'left-top')
     local tileLeftBottom = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'left-bottom')
     
     -- if there are no tiles below or a solid tile on the current direction, turn around and go
     if tileLeftTop or not tileLeftBottom then
-      self.snail.x = self.snail.x + SNAIL_MOVE_SPEED * dt
+      self.snail.position.x = self.snail.position.x + SNAIL_MOVE_SPEED * dt
       self.snail.orientation = 'right'
       self.movingPeriod = math.random(5)
       self.movingTimer = 0
     end
   elseif self.snail.orientation == 'right' then
-    self.snail.x = self.snail.x + SNAIL_MOVE_SPEED * dt
+    self.snail.position.x = self.snail.position.x + SNAIL_MOVE_SPEED * dt
     
     local tileRightTop = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'right-top')
     local tileRightBottom = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'right-bottom')
     
     -- if there are no tiles below or a solid tile on the current direction, turn around and go
     if tileRightTop or not tileRightBottom then
-      self.snail.x = self.snail.x - SNAIL_MOVE_SPEED * dt
+      self.snail.position.x = self.snail.position.x - SNAIL_MOVE_SPEED * dt
       self.snail.orientation = 'left'
       self.movingPeriod = math.random(5)
       self.movingTimer = 0

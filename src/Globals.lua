@@ -22,6 +22,7 @@ require 'StateMachine'
 require 'Tile'
 require 'TileMap'
 require 'Util'
+require 'Vector2D'
 
 --[[
     constants

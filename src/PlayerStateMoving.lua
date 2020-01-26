@@ -13,16 +13,13 @@ end
 
 function PlayerStateMoving:update(dt)
   -- set collider with a little margin to adjust to its feet
-  local colliderOffsetX = 4
-  local colliderOffsetY = 1
+  local colliderOffset = Vector2D(4, 1)
 
   self.player.collider:setTo(
-    self.player.x, 
-    self.player.y, 
-    colliderOffsetX, 
-    colliderOffsetY, 
-    CHARACTER_WIDTH - colliderOffsetX * 2,
-    CHARACTER_HEIGHT - colliderOffsetY
+    self.player.position,
+    colliderOffset, 
+    CHARACTER_WIDTH - colliderOffset.x * 2,
+    CHARACTER_HEIGHT - colliderOffset.y
   )
   
   self.player.currentAnimation:update(dt)
@@ -33,15 +30,12 @@ function PlayerStateMoving:update(dt)
   
   -- widen the collider for sideways collisions, to avoid the 'below' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
-  colliderOffsetX = 1
-  colliderOffsetY = 1
+  colliderOffset = Vector2D(1, 1)
   self.player.collider:setTo(
-    self.player.x, 
-    self.player.y, 
-    colliderOffsetX, 
-    colliderOffsetY, 
-    CHARACTER_WIDTH - colliderOffsetX * 2,
-    CHARACTER_HEIGHT - colliderOffsetY * 2
+    self.player.position, 
+    colliderOffset, 
+    CHARACTER_WIDTH - colliderOffset.x * 2,
+    CHARACTER_HEIGHT - colliderOffset.y * 2
   )
   
   -- go to idle if the player is not giving any input
@@ -50,33 +44,33 @@ function PlayerStateMoving:update(dt)
     self.player:changeState('idle')
   else
     if not (tileLeftBottom or tileRightBottom) then
-      self.player.dy = 0
+      self.player.velocity.y = 0
       self.player:changeState('falling')
     elseif love.keyboard.isDown('left') then    
       self.player.orientation = 'left'
-      self.player.x = self.player.x - PLAYER_MOVE_SPEED * dt
+      self.player.position.x = self.player.position.x - PLAYER_MOVE_SPEED * dt
       local tileLeftTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-top')
       local tileLeftBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
     
       if tileLeftTop or tileLeftBottom then
         local tile = tileLeftTop ~= nil and tileLeftTop or tileLeftBottom
-        self.player.x = (tile.x - 1) * TILE_SIZE + tile.width - 1
+        self.player.position.x = (tile.position.x - 1) * TILE_SIZE + tile.width - 1
       end
     elseif love.keyboard.isDown('right') then
       self.player.orientation = 'right'
-      self.player.x = self.player.x + PLAYER_MOVE_SPEED * dt
+      self.player.position.x = self.player.position.x + PLAYER_MOVE_SPEED * dt
       local tileRightTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-top')
       local tileRightBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
     
       if tileRightTop or tileRightBottom then
         local tile = tileRightTop ~= nil and tileRightTop or tileRightBottom
-        self.player.x = (tile.x - 1) * TILE_SIZE - self.player.width
+        self.player.position.x = (tile.position.x - 1) * TILE_SIZE - self.player.width
       end
     end
   end
   
   -- jump
-  if love.keyboard.keysPressed['space'] and player.dy == 0 then
+  if love.keyboard.keysPressed['space'] and player.velocity.y == 0 then
     self.player:changeState('jumping')
   end
 end

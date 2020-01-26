@@ -1,8 +1,7 @@
 GameObject = Class{}
 
 function GameObject:init(def)
-  self.x = def.x
-  self.y = def.y
+  self.position = def.position
   self.texture = def.texture
   self.width = def.width
   self.height = def.height
@@ -10,5 +9,5 @@ function GameObject:init(def)
 end
 
 function GameObject:render()
-  love.graphics.draw(TEXTURES[self.texture], FRAMES[self.texture][self.frame], self.x, self.y)
+  love.graphics.draw(TEXTURES[self.texture], FRAMES[self.texture][self.frame], self.position.x, self.position.y)
 end

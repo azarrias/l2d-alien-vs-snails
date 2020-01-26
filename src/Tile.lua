@@ -1,8 +1,7 @@
 Tile = Class{}
 
 function Tile:init(x, y, id, topper, tileset, topperset)
-  self.x = x
-  self.y = y
+  self.position = Vector2D(x, y)
   
   self.width = TILE_SIZE
   self.height = TILE_SIZE
@@ -15,12 +14,12 @@ end
 
 function Tile:render()
   love.graphics.draw(TEXTURES['tiles'], FRAMES['tilesets'][self.tileset][self.id], 
-      (self.x - 1) * self.width, (self.y - 1) * self.height)
+      (self.position.x - 1) * self.width, (self.position.y - 1) * self.height)
       
   -- if the tile has the topper flag, draw the topper sprite on top of it
   if self.topper then
     love.graphics.draw(TEXTURES['toppers'], FRAMES['toppersets'][self.topperset][TILE_ID_TOPPER], 
-        (self.x - 1) * self.width, (self.y - 1) * self.height)
+        (self.position.x - 1) * self.width, (self.position.y - 1) * self.height)
   end
 end
 

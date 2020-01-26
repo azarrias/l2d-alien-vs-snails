@@ -30,7 +30,7 @@ function love.load()
   gameLevel:spawnEnemies()
   
   player = Player({
-      x = 0, y = 0,
+      position = Vector2D(0, 0),
       width = CHARACTER_WIDTH,
       height = CHARACTER_HEIGHT,
       texture = 'green-alien',
@@ -43,8 +43,8 @@ function love.load()
       spriteOrientation = 'right',
       level = gameLevel,
       collider = Collider {
-        x = 0, y = 0,
-        localX = 3, localY = 2,
+        position = Vector2D(0, 0),
+        localPosition = Vector2D(3, 2),
         width = CHARACTER_WIDTH - 6,
         height = CHARACTER_HEIGHT - 2
       }
@@ -77,7 +77,7 @@ function love.update(dt)
   player:update(dt)
   
   -- set the camera's left edge to half the screen to the left of the player's x coordinate
-  cameraScroll = player.x - (VIRTUAL_WIDTH / 2) + (player.width / 2)
+  cameraScroll = player.position.x - (VIRTUAL_WIDTH / 2) + (player.width / 2)
   
   love.keyboard.keysPressed = {}
 end

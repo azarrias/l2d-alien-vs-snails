@@ -47,11 +47,10 @@ function GameLevel:spawnEnemies()
             -- instantiate snail, must declare it first so it can be passed into the state machine
             local snail
             snail = Snail({
-              texture = 'creatures',
-              x = (x - 1) * TILE_SIZE,
-              y = (y - 2) * TILE_SIZE,
+              position = Vector2D((x - 1) * TILE_SIZE, (y - 2) * TILE_SIZE),
               width = CREATURE_WIDTH,
               height = CREATURE_HEIGHT,
+              texture = 'creatures',
               stateMachine = StateMachine {
                 ['idle'] = function() return SnailStateIdle(snail) end,
                 ['moving'] = function() return SnailStateMoving(snail) end
@@ -59,10 +58,8 @@ function GameLevel:spawnEnemies()
               spriteOrientation = 'left',
               level = gameLevel,
               collider = Collider {
-                x = (x - 1) * TILE_SIZE, 
-                y = (y - 2) * TILE_SIZE,
-                localX = 3, 
-                localY = 6,
+                position = Vector2D((x - 1) * TILE_SIZE, (y - 2) * TILE_SIZE),
+                localPosition = Vector2D(3, 6),
                 width = CREATURE_WIDTH - 6,
                 height = CREATURE_HEIGHT - 6
               }
