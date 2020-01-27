@@ -18,14 +18,8 @@ end
 
 function PlayerStateJumping:update(dt)
   -- set collider with a little margin for the player to get through gaps
-  local colliderOffset = Vector2D(3, 1)
-  
-  self.player.collider:setTo(
-    self.player.position, 
-    colliderOffset,
-    CHARACTER_WIDTH - colliderOffset.x * 2,
-    CHARACTER_HEIGHT - 3
-  )
+  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT - 3 + 1) / 2)
+  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 6, CHARACTER_HEIGHT - 3)
 
   self.player.animation:update(dt)
   self.player.velocity.y = self.player.velocity.y + self.gravity
@@ -43,13 +37,8 @@ function PlayerStateJumping:update(dt)
  
   -- widen the collider for sideways collisions, to avoid the 'above' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
-  colliderOffset = Vector2D(1, 1)
-  self.player.collider:setTo(
-    self.player.position, 
-    colliderOffset, 
-    CHARACTER_WIDTH - colliderOffset.x * 2,
-    CHARACTER_HEIGHT - colliderOffset.y * 2
-  )
+  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
+  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 2, CHARACTER_HEIGHT - 2)
   
   -- if there are collidable tiles above, go to falling state
   if tileLeftTop or tileRightTop then

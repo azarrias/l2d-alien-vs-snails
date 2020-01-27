@@ -9,6 +9,7 @@ local FONT_SIZE = 16
 
 local CAMERA_SCROLL_SPEED = 40
 
+local player
 local playerOrientation = 'right'
 local tiles = {}
 
@@ -41,15 +42,14 @@ function love.load()
         ['falling'] = function() return PlayerStateFalling(player, GRAVITY) end
       },
       spriteOrientation = 'right',
-      level = gameLevel,
-      collider = Collider {
-        position = Vector2D(0, 0),
-        localPosition = Vector2D(3, 2),
-        width = CHARACTER_WIDTH - 6,
-        height = CHARACTER_HEIGHT - 2
-      }
+      level = gameLevel
   })
 
+  player.collider = Collider {
+    parent = player,
+    center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT + 2) / 2),
+    size = Vector2D(CHARACTER_WIDTH - 6, CHARACTER_HEIGHT - 2)        
+  }
   player:changeState('falling')
   
   -- Set up window

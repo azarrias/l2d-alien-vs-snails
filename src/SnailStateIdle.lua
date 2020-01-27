@@ -15,13 +15,8 @@ end
 function SnailStateIdle:enter(params)
   self.waitPeriod = params.wait
   
-  local colliderOffset = Vector2D(3, 6)
-  self.snail.collider:setTo(
-    self.snail.position,
-    colliderOffset,
-    CREATURE_WIDTH - colliderOffset.x * 2,
-    CREATURE_HEIGHT - colliderOffset.y
-  )
+  self.snail.collider.center = Vector2D(CREATURE_WIDTH / 2, (CREATURE_HEIGHT + 6) / 2)
+  self.snail.collider.size = Vector2D(CREATURE_WIDTH - 6, CREATURE_HEIGHT - 6)
 end
 
 function SnailStateIdle:update(dt)

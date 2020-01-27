@@ -15,13 +15,8 @@ function SnailStateMoving:init(snail)
 end
 
 function SnailStateMoving:enter(params)
-  local colliderOffset = Vector2D(1, 5)
-  self.snail.collider:setTo(
-    self.snail.position,
-    colliderOffset,
-    CREATURE_WIDTH - colliderOffset.x * 2,
-    CREATURE_HEIGHT - colliderOffset.y
-  )
+  self.snail.collider.center = Vector2D(CREATURE_WIDTH / 2, (CREATURE_HEIGHT + 5) / 2)
+  self.snail.collider.size = Vector2D(CREATURE_WIDTH - 2, CREATURE_HEIGHT - 5)
 end
 
 function SnailStateMoving:update(dt)

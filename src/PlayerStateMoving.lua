@@ -13,14 +13,8 @@ end
 
 function PlayerStateMoving:update(dt)
   -- set collider with a little margin to adjust to its feet
-  local colliderOffset = Vector2D(4, 1)
-
-  self.player.collider:setTo(
-    self.player.position,
-    colliderOffset, 
-    CHARACTER_WIDTH - colliderOffset.x * 2,
-    CHARACTER_HEIGHT - colliderOffset.y
-  )
+  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT + 1) / 2)
+  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 8, CHARACTER_HEIGHT - 1)
   
   self.player.currentAnimation:update(dt)
   
@@ -30,13 +24,8 @@ function PlayerStateMoving:update(dt)
   
   -- widen the collider for sideways collisions, to avoid the 'below' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
-  colliderOffset = Vector2D(1, 1)
-  self.player.collider:setTo(
-    self.player.position, 
-    colliderOffset, 
-    CHARACTER_WIDTH - colliderOffset.x * 2,
-    CHARACTER_HEIGHT - colliderOffset.y * 2
-  )
+  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
+  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 2, CHARACTER_HEIGHT - 2)
   
   -- go to idle if the player is not giving any input
   -- go to falling state if there are no tiles below
@@ -70,7 +59,7 @@ function PlayerStateMoving:update(dt)
   end
   
   -- jump
-  if love.keyboard.keysPressed['space'] and player.velocity.y == 0 then
+  if love.keyboard.keysPressed['space'] and self.player.velocity.y == 0 then
     self.player:changeState('jumping')
   end
 end

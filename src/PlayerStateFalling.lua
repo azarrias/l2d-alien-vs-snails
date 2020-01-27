@@ -14,14 +14,8 @@ end
 
 function PlayerStateFalling:update(dt)
   -- set collider with a little margin to adjust to its feet
-  local colliderOffset = Vector2D(4, 1)
-
-  self.player.collider:setTo(
-    self.player.position,
-    colliderOffset,
-    CHARACTER_WIDTH - colliderOffset.x * 2,
-    CHARACTER_HEIGHT - colliderOffset.y
-  )
+  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT + 1) / 2)
+  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 8, CHARACTER_HEIGHT - 1)
   
   self.player.animation:update(dt)
   self.player.velocity.y = self.player.velocity.y + self.gravity
@@ -33,13 +27,8 @@ function PlayerStateFalling:update(dt)
   
   -- widen the collider for sideways collisions, to avoid the 'below' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
-  colliderOffset = Vector2D(1, 4)
-  self.player.collider:setTo(
-    self.player.position, 
-    colliderOffset, 
-    CHARACTER_WIDTH - colliderOffset.x * 2,
-    CHARACTER_HEIGHT - colliderOffset.y * 2
-  )
+  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
+  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 2, CHARACTER_HEIGHT - 8)
   
   -- if there are collidable tiles below, go to walking or idle state
   if tileLeftBottom or tileRightBottom then
