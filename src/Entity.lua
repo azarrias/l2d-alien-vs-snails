@@ -17,6 +17,13 @@ function Entity:init(def)
   self.level = def.level
   
   self.collider = def.collider
+  self.collider.parent = self
+end
+
+function Entity:addCollider(parent, collider)
+  self.collider = collider
+  self.collider.parent = parent
+  parent.collider.parent = parent
 end
 
 function Entity:changeState(state, params)

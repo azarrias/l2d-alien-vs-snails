@@ -18,8 +18,9 @@ end
 
 function PlayerStateJumping:update(dt)
   -- set collider with a little margin for the player to get through gaps
-  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT - 3 + 1) / 2)
-  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 6, CHARACTER_HEIGHT - 3)
+--  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT - 3 + 1) / 2)
+  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 6)
+  self.player.collider.size = Vector2D(CHARACTER_WIDTH - 6, 2)
 
   self.player.animation:update(dt)
   self.player.velocity.y = self.player.velocity.y + self.gravity
@@ -34,7 +35,16 @@ function PlayerStateJumping:update(dt)
   -- check the tiles above the player's head
   local tileLeftTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-top')
   local tileRightTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-top')
- 
+  local gameObject
+  
+  -- check if there is collision with any game object going up
+  gameObject = self.player.collider:checkObjectCollisions()
+  if gameObject then
+    self.player.position.y = gameObject.position.y + gameObject.collider.center.y + gameObject.collider.size.y / 2
+    self.player.velocity.y = 0
+    self.player:changeState('falling')
+  end
+  
   -- widen the collider for sideways collisions, to avoid the 'above' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
   self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
@@ -55,6 +65,14 @@ function PlayerStateJumping:update(dt)
     if tileLeftTop or tileLeftBottom then
       local tile = tileLeftTop ~= nil and tileLeftTop or tileLeftBottom
       self.player.position.x = (tile.position.x - 1) * TILE_SIZE + tile.width - 1
+    else
+      self.player.collider.center.y = self.player.collider.center.y - 1
+      gameObject = self.player.collider:checkObjectCollisions()
+      self.player.collider.center.y = self.player.collider.center.y + 1
+      
+      if gameObject then
+        self.player.position.x = self.player.position.x + PLAYER_MOVE_SPEED * dt
+      end
     end
       
   elseif love.keyboard.isDown('right') then
@@ -66,6 +84,14 @@ function PlayerStateJumping:update(dt)
     if tileRightTop or tileRightBottom then
       local tile = tileRightTop ~= nil and tileRightTop or tileRightBottom
       self.player.position.x = (tile.position.x - 1) * TILE_SIZE - self.player.width
+    else
+      self.player.collider.center.y = self.player.collider.center.y - 1
+      gameObject = self.player.collider:checkObjectCollisions()
+      self.player.collider.center.y = self.player.collider.center.y + 1
+      
+      if gameObject then
+        self.player.position.x = self.player.position.x - PLAYER_MOVE_SPEED * dt
+      end      
     end
   end
 end

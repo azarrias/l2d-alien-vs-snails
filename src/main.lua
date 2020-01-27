@@ -9,9 +9,9 @@ local FONT_SIZE = 16
 
 local CAMERA_SCROLL_SPEED = 40
 
-local player
 local playerOrientation = 'right'
 local tiles = {}
+local player
 
 function love.load()
   if arg[#arg] == "-debug" then 
@@ -28,7 +28,7 @@ function love.load()
   backgroundB = math.random()
   
   gameLevel = LevelMaker.create(100, 10)
-  gameLevel:spawnEnemies()
+  --gameLevel:spawnEnemies()
   
   player = Player({
       position = Vector2D(0, 0),
@@ -42,14 +42,13 @@ function love.load()
         ['falling'] = function() return PlayerStateFalling(player, GRAVITY) end
       },
       spriteOrientation = 'right',
-      level = gameLevel
+      level = gameLevel,
+      collider = Collider {
+        center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT + 2) / 2),
+        size = Vector2D(CHARACTER_WIDTH - 6, CHARACTER_HEIGHT - 2)
+      }
   })
 
-  player.collider = Collider {
-    parent = player,
-    center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT + 2) / 2),
-    size = Vector2D(CHARACTER_WIDTH - 6, CHARACTER_HEIGHT - 2)        
-  }
   player:changeState('falling')
   
   -- Set up window
