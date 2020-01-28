@@ -1,7 +1,7 @@
 Player = Class{__includes = Entity}
 
 function Player:init(def)
-  Entity.init(self, def)
+  Entity.init(self, def, 'player')
 end
 
 function Player:update(dt)

@@ -18,6 +18,8 @@ function love.load()
     require("mobdebug").start() 
   end
   
+  io.stdout:setvbuf("no")
+  
   math.randomseed(os.time())
   
   -- offset that will be used to translate the scene to emulate a camera

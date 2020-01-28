@@ -22,6 +22,11 @@ function PlayerStateMoving:update(dt)
   local tileLeftBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
   local tileRightBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
   
+  -- check for game objects below
+  self.player.collider.center.y = self.player.collider.center.y + 1
+  local gameObject = self.player.collider:checkObjectCollisions()
+  self.player.collider.center.y = self.player.collider.center.y - 1
+  
   -- widen the collider for sideways collisions, to avoid the 'below' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
   self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
@@ -32,7 +37,7 @@ function PlayerStateMoving:update(dt)
   if not love.keyboard.isDown('left') and not love.keyboard.isDown('right') then
     self.player:changeState('idle')
   else
-    if not (tileLeftBottom or tileRightBottom) then
+    if not (tileLeftBottom or tileRightBottom or gameObject) then
       self.player.velocity.y = 0
       self.player:changeState('falling')
     elseif love.keyboard.isDown('left') then    

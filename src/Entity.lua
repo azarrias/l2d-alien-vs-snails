@@ -1,6 +1,6 @@
 Entity = Class{}
 
-function Entity:init(def)
+function Entity:init(def, t)
   self.position = def.position
   self.velocity = Vector2D(0, 0)
   
@@ -18,6 +18,7 @@ function Entity:init(def)
   
   self.collider = def.collider
   self.collider.parent = self
+  self.type = t
 end
 
 function Entity:addCollider(parent, collider)
@@ -27,6 +28,9 @@ function Entity:addCollider(parent, collider)
 end
 
 function Entity:changeState(state, params)
+  if self.type == 'player' then
+    print(state)
+  end
   self.stateMachine:change(state, params)
 end
 

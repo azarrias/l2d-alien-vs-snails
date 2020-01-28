@@ -18,7 +18,6 @@ end
 
 function PlayerStateJumping:update(dt)
   -- set collider with a little margin for the player to get through gaps
---  self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT - 3 + 1) / 2)
   self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 6)
   self.player.collider.size = Vector2D(CHARACTER_WIDTH - 6, 2)
 
@@ -35,10 +34,9 @@ function PlayerStateJumping:update(dt)
   -- check the tiles above the player's head
   local tileLeftTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-top')
   local tileRightTop = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-top')
-  local gameObject
-  
+ 
   -- check if there is collision with any game object going up
-  gameObject = self.player.collider:checkObjectCollisions()
+  local gameObject = self.player.collider:checkObjectCollisions()
   if gameObject then
     self.player.position.y = gameObject.position.y + gameObject.collider.center.y + gameObject.collider.size.y / 2
     self.player.velocity.y = 0

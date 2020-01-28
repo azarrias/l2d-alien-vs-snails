@@ -25,13 +25,16 @@ function PlayerStateFalling:update(dt)
   local tileLeftBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
   local tileRightBottom = self.player.collider:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
   
+  -- check if there is collision with any game object going down
+  local gameObject = self.player.collider:checkObjectCollisions()
+  
   -- widen the collider for sideways collisions, to avoid the 'below' collision from going off mistakenly
   -- (this could be improved by using several colliders instead)
   self.player.collider.center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT / 2)
   self.player.collider.size = Vector2D(CHARACTER_WIDTH - 2, CHARACTER_HEIGHT - 8)
   
   -- if there are collidable tiles below, go to walking or idle state
-  if tileLeftBottom or tileRightBottom then
+  if tileLeftBottom or tileRightBottom or gameObject then
     self.player.velocity.y = 0
     
     if love.keyboard.isDown('left') or love.keyboard.isDown('right') then
@@ -42,7 +45,11 @@ function PlayerStateFalling:update(dt)
     
     -- rectify the player's y coordinate to its appropriate value
     local tile = tileLeftBottom ~= nil and tileLeftBottom or tileRightBottom
-    self.player.position.y = (tile.position.y - 1) * TILE_SIZE - self.player.height
+    if tile then
+      self.player.position.y = (tile.position.y - 1) * TILE_SIZE - self.player.height
+    else
+      self.player.position.y = gameObject.position.y + gameObject.collider.center.y - gameObject.collider.size.y / 2 - self.player.height
+    end
   
   -- if the player is moving in the air, check for side collisions
   elseif love.keyboard.isDown('left') then
