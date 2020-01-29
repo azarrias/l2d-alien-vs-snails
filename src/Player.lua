@@ -1,7 +1,13 @@
 Player = Class{__includes = Entity}
 
 function Player:init(def)
-  Entity.init(self, def, 'player')
+  Entity.init(self, def)
+  self.topCollider = def.topCollider
+  self.bottomCollider = def.bottomCollider
+  self.leftCollider = def.leftCollider
+  self.rightCollider = def.rightCollider
+  self.topCollider.parent, self.bottomCollider.parent = self, self
+  self.leftCollider.parent, self.rightCollider.parent = self, self
 end
 
 function Player:update(dt)
@@ -17,4 +23,10 @@ end
 
 function Player:render(dt)
   Entity.render(self)
+  
+  -- draw collider rects
+  self.topCollider:render()
+  self.bottomCollider:render()
+  self.leftCollider:render()
+  self.rightCollider:render()
 end

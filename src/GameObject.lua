@@ -6,16 +6,14 @@ function GameObject:init(def)
   self.width = def.width
   self.height = def.height
   self.frame = def.frame
-  self.collider = nil
+  self.collider = def.collider
+  if self.collider then
+    self.collider.parent = self
+  end
   self.consumable = def.consumable
   self.onCollide = def.onCollide
   self.onConsume = def.onConsume
   self.hit = def.hit
-end
-
-function GameObject:addCollider(parent, collider)
-  self.collider = collider
-  self.collider.parent = parent
 end
 
 function GameObject:render()

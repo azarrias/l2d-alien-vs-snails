@@ -1,6 +1,6 @@
 Entity = Class{}
 
-function Entity:init(def, t)
+function Entity:init(def)
   self.position = def.position
   self.velocity = Vector2D(0, 0)
   
@@ -15,10 +15,6 @@ function Entity:init(def, t)
   
   -- references to game level to check for collisions
   self.level = def.level
-  
-  self.collider = def.collider
-  self.collider.parent = self
-  self.type = t
 end
 
 function Entity:addCollider(parent, collider)
@@ -28,9 +24,6 @@ function Entity:addCollider(parent, collider)
 end
 
 function Entity:changeState(state, params)
-  if self.type == 'player' then
-    print(state)
-  end
   self.stateMachine:change(state, params)
 end
 
@@ -48,9 +41,4 @@ function Entity:render()
     0, self.orientation == self.spriteOrientation and 1 or -1, 1,
     -- set origin to the sprite center (to allow reversing it through negative scaling)
     self.width / 2, self.height / 2)
-  
-  -- draw collider rect
-  if self.collider then
-    self.collider:render()
-  end
 end

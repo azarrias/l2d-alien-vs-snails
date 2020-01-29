@@ -52,21 +52,19 @@ function LevelMaker.create(width, height)
     end
     
     if spawnBlock then
-      local gObj
-      gObj = GameObject({
-        position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 1) * TILE_SIZE),
-        texture = 'jump-blocks',
-        width = TILE_SIZE,
-        height = TILE_SIZE,
-        frame = math.random(#JUMP_BLOCK_IDS)
-      })
-    
-      gObj:addCollider(gObj, Collider {
-        center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-        size = Vector2D(TILE_SIZE, TILE_SIZE)
-      })
-      
-      table.insert(objects, gObj)
+      table.insert(objects,
+        GameObject {
+          position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 1) * TILE_SIZE),
+          texture = 'jump-blocks',
+          width = TILE_SIZE,
+          height = TILE_SIZE,
+          frame = math.random(#JUMP_BLOCK_IDS),
+          collider = Collider {
+            center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+            size = Vector2D(TILE_SIZE, TILE_SIZE)
+          }
+        }
+      )
     end
           
     -- always generate ground

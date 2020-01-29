@@ -30,7 +30,7 @@ function love.load()
   backgroundB = math.random()
   
   gameLevel = LevelMaker.create(100, 10)
-  --gameLevel:spawnEnemies()
+  gameLevel:spawnEnemies()
   
   player = Player({
       position = Vector2D(0, 0),
@@ -45,9 +45,21 @@ function love.load()
       },
       spriteOrientation = 'right',
       level = gameLevel,
-      collider = Collider {
-        center = Vector2D(CHARACTER_WIDTH / 2, (CHARACTER_HEIGHT + 2) / 2),
-        size = Vector2D(CHARACTER_WIDTH - 6, CHARACTER_HEIGHT - 2)
+      topCollider = Collider {
+        center = Vector2D(CHARACTER_WIDTH / 2, 2),
+        size = Vector2D(10, 2)
+      },
+      bottomCollider = Collider {
+        center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT + 1),
+        size = Vector2D(8, 2)
+      },
+      leftCollider = Collider {
+        center = Vector2D(2, CHARACTER_HEIGHT / 2),
+        size = Vector2D(2, CHARACTER_HEIGHT - 4)
+      },
+      rightCollider = Collider {
+        center = Vector2D(CHARACTER_WIDTH - 2, CHARACTER_HEIGHT / 2),
+        size = Vector2D(2, CHARACTER_HEIGHT - 4)
       }
   })
 
