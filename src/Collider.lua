@@ -47,7 +47,7 @@ function Collider:checkObjectCollisions()
   for k, object in pairs(self.parent.level.objects) do
     if object.collider and self:collides(object.collider) then
       if object.consumable then
-        object.onConsume(self)
+        object.onConsume(self.parent)
         table.remove(self.parent.level.objects, k)
       else
 --        object.onCollide(object)
@@ -57,6 +57,14 @@ function Collider:checkObjectCollisions()
   end
   
   return nil
+end
+
+function Collider:checkEntityCollisions()
+  for k, entity in pairs(self.parent.level.entities) do
+    if self:collides(entity.collider) then
+      table.remove(self.parent.level.entities, k)
+    end
+  end
 end
 
 function Collider:collides(other)
