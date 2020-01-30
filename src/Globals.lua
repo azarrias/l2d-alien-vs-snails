@@ -55,6 +55,7 @@ TOPPER_SETS_TALL = 18
 -- sprite pixels
 CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
 CREATURE_WIDTH, CREATURE_HEIGHT = 16, 16
+BACKGROUND_WIDTH, BACKGROUND_HEIGHT = 256, 128
 TILE_SIZE = 16
 
 -- physics for entities
@@ -72,7 +73,8 @@ TEXTURES = {
   ['pink-alien'] = love.graphics.newImage('graphics/pink_alien.png'),
   ['creatures'] = love.graphics.newImage('graphics/creatures.png'),
   ['bushes'] = love.graphics.newImage('graphics/bushes_and_cacti.png'),
-  ['jump-blocks'] = love.graphics.newImage('graphics/jump_blocks.png')
+  ['jump-blocks'] = love.graphics.newImage('graphics/jump_blocks.png'),
+  ['backgrounds'] = love.graphics.newImage('graphics/backgrounds.png')
 }
 
 FRAMES = {
@@ -81,7 +83,8 @@ FRAMES = {
   ['green-alien'] = GenerateQuads(TEXTURES['green-alien'], CHARACTER_WIDTH, CHARACTER_HEIGHT),
   ['creatures'] = GenerateQuads(TEXTURES['creatures'], CREATURE_WIDTH, CREATURE_HEIGHT),
   ['bushes'] = GenerateQuads(TEXTURES['bushes'], TILE_SIZE, TILE_SIZE),
-  ['jump-blocks'] = GenerateQuads(TEXTURES['jump-blocks'], TILE_SIZE, TILE_SIZE)
+  ['jump-blocks'] = GenerateQuads(TEXTURES['jump-blocks'], TILE_SIZE, TILE_SIZE),
+  ['backgrounds'] = GenerateQuads(TEXTURES['backgrounds'], BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
 }
 
 -- these need to be added after FRAMES is initialized because they refer to it from within

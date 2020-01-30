@@ -17,6 +17,7 @@ function Collider:render()
     self.size.x, 
     self.size.y
   )
+  love.graphics.setColor(1, 1, 1)
 end
 
 function Collider:checkTileCollisions(dt, tilemap, direction)
