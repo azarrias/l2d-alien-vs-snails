@@ -2,8 +2,6 @@ require 'Globals'
 
 local MOBILE_OS = (love._version_major > 0 or love._version_minor >= 9) and (love.system.getOS() == 'Android' or love.system.getOS() == 'OS X')
 local WEB_OS = (love._version_major > 0 or love._version_minor >= 9) and love.system.getOS() == 'Web'
-local WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
-local VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 256, 144
 local GAME_TITLE = 'Alien vs Snails'
 local FONT_SIZE = 16
 
@@ -11,7 +9,7 @@ local CAMERA_SCROLL_SPEED = 40
 
 local playerOrientation = 'right'
 local tiles = {}
-local player, background, backgroundX
+local player, background, backgroundX, camera
 
 function love.load()
   if arg[#arg] == "-debug" then 
@@ -21,9 +19,6 @@ function love.load()
   io.stdout:setvbuf("no")
   
   math.randomseed(os.time())
-  
-  -- offset that will be used to translate the scene to emulate a camera
-  cameraScroll = 0
   
   background = math.random(#FRAMES['backgrounds'])
   backgroundX = 0
@@ -64,6 +59,8 @@ function love.load()
 
   player:changeState('falling')
   
+  camera = Camera(player)
+  
   -- Set up window
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
     vsync = true,
@@ -87,14 +84,10 @@ function love.update(dt)
   
   gameLevel:update(dt)
   player:update(dt)
-  
-  -- set the camera's left edge to half the screen to the left of the player's x coordinate
-  cameraX = math.max(0, 
-    math.min(TILE_SIZE * gameLevel.tileMap.width - VIRTUAL_WIDTH, 
-      player.position.x - (VIRTUAL_WIDTH / 2) + (player.width / 2)))
+  camera:update()
   
   -- adjust background X to move a third the rate of the camera for parallax scrolling
-  backgroundX = cameraX / 3 % 256
+  backgroundX = camera.position.x / 3 % 256
   
   love.keyboard.keysPressed = {}
 end
@@ -126,7 +119,7 @@ function love.draw()
   -- like we're actually moving right and vice-versa; note the use of math.floor, as rendering
   -- fractional camera offsets with a virtual resolution will result in weird pixelation and artifacting
   -- as things are attempted to be drawn fractionally and then forced onto a small virtual canvas
-  love.graphics.translate(-math.floor(cameraX), 0)
+  love.graphics.translate(-math.floor(camera.position.x), 0)
   
   gameLevel:render()
   

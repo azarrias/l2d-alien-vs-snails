@@ -5,6 +5,7 @@ push = require 'libs.push'
 -- general purpose / utility
 require 'Animation'
 require 'BaseState'
+require 'Camera'
 require 'Collider'
 require 'Entity'
 require 'GameLevel'
@@ -51,6 +52,10 @@ TILE_SETS_TALL = 10
 -- number of topper sets in sheet
 TOPPER_SETS_WIDE = 6
 TOPPER_SETS_TALL = 18
+
+-- pixels resolution
+WINDOW_WIDTH, WINDOW_HEIGHT = 1280, 720
+VIRTUAL_WIDTH, VIRTUAL_HEIGHT = 256, 144
 
 -- sprite pixels
 CHARACTER_WIDTH, CHARACTER_HEIGHT = 16, 20
