@@ -9,6 +9,7 @@ function Collider:init(def)
 end
 
 function Collider:render()
+
   love.graphics.setColor(1, 0.6, 0.6, 0.7)
   love.graphics.rectangle(
     'fill', 
@@ -18,6 +19,7 @@ function Collider:render()
     self.size.y
   )
   love.graphics.setColor(1, 1, 1)
+
 end
 
 function Collider:checkTileCollisions(dt, tilemap, direction)

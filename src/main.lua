@@ -20,6 +20,13 @@ function love.load()
   
   math.randomseed(os.time())
   
+  gameStateMachine = StateMachine {
+    ['start'] = function() return GameStateStart() end,
+    ['play'] = function() return GameStatePlay() end
+  }
+  gameStateMachine:change('start')
+
+--[[
   background = math.random(#FRAMES['backgrounds'])
   backgroundX = 0
   
@@ -60,6 +67,7 @@ function love.load()
   player:changeState('falling')
   
   camera = Camera(player)
+]]
   
   -- Set up window
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -82,13 +90,15 @@ function love.update(dt)
     love.event.quit()
   end
   
+--[[
   gameLevel:update(dt)
   player:update(dt)
   camera:update()
   
   -- adjust background X to move a third the rate of the camera for parallax scrolling
   backgroundX = camera.position.x / 3 % 256
-  
+]]
+  gameStateMachine:update(dt)
   love.keyboard.keysPressed = {}
 end
 
@@ -104,7 +114,8 @@ end
 
 function love.draw()
   push:start()
-  
+ 
+--[[
   -- draw background two times to complete the level with it flipped vertically below
   love.graphics.draw(TEXTURES['backgrounds'], FRAMES['backgrounds'][background], 
     math.floor(-backgroundX), 0)
@@ -125,6 +136,8 @@ function love.draw()
   
   -- draw animated player
   player:render()
+]]
+  gameStateMachine:render()
 
   push:finish()
 end
