@@ -83,7 +83,8 @@ TEXTURES = {
   ['creatures'] = love.graphics.newImage('graphics/creatures.png'),
   ['bushes'] = love.graphics.newImage('graphics/bushes_and_cacti.png'),
   ['jump-blocks'] = love.graphics.newImage('graphics/jump_blocks.png'),
-  ['backgrounds'] = love.graphics.newImage('graphics/backgrounds.png')
+  ['backgrounds'] = love.graphics.newImage('graphics/backgrounds.png'),
+  ['gems'] = love.graphics.newImage('graphics/gems.png')
 }
 
 FRAMES = {
@@ -93,7 +94,8 @@ FRAMES = {
   ['creatures'] = GenerateQuads(TEXTURES['creatures'], CREATURE_WIDTH, CREATURE_HEIGHT),
   ['bushes'] = GenerateQuads(TEXTURES['bushes'], TILE_SIZE, TILE_SIZE),
   ['jump-blocks'] = GenerateQuads(TEXTURES['jump-blocks'], TILE_SIZE, TILE_SIZE),
-  ['backgrounds'] = GenerateQuads(TEXTURES['backgrounds'], BACKGROUND_WIDTH, BACKGROUND_HEIGHT)
+  ['backgrounds'] = GenerateQuads(TEXTURES['backgrounds'], BACKGROUND_WIDTH, BACKGROUND_HEIGHT),
+  ['gems'] = GenerateQuads(TEXTURES['gems'], TILE_SIZE, TILE_SIZE)
 }
 
 -- these need to be added after FRAMES is initialized because they refer to it from within
@@ -111,9 +113,8 @@ FONTS = {
 }
   
 -- game object IDs that corresponds to the sprite number in the respective sprite sheet
-BUSH_IDS = {
-    1, 2, 5, 6, 7
-}
+BUSH_IDS = { 1, 2, 5, 6, 7 }
+GEMS = { 1, 2, 3, 4, 5, 6, 7, 8 }
 
 JUMP_BLOCK_IDS = {}
 for i = 1, 30 do

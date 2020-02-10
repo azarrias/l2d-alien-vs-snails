@@ -8,6 +8,7 @@ function Player:init(def)
   self.rightCollider = def.rightCollider
   self.topCollider.parent, self.bottomCollider.parent = self, self
   self.leftCollider.parent, self.rightCollider.parent = self, self
+  self.score = 0
 end
 
 function Player:update(dt)

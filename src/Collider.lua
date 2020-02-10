@@ -53,7 +53,6 @@ function Collider:checkObjectCollisions()
         object.onConsume(self.parent)
         table.remove(self.parent.level.objects, k)
       else
---        object.onCollide(object)
         return object
       end
     end

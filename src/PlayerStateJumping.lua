@@ -37,6 +37,8 @@ function PlayerStateJumping:update(dt)
     self.player.position.y = gameObject.position.y + gameObject.collider.center.y + gameObject.collider.size.y / 2
     self.player.velocity.y = 0
     self.player:changeState('falling')
+    gameObject.onCollide(gameObject)
+    
     return
   end
   

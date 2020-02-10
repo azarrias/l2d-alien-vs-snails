@@ -65,7 +65,38 @@ function LevelMaker.create(width, height)
             collider = Collider {
               center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
               size = Vector2D(TILE_SIZE, TILE_SIZE)
-            }
+            },
+            hit = false,
+            -- collision function passes the object itself as an argument
+            onCollide = function(obj)
+              -- if the object is hit by the first time, it may randomly spawn a gem
+              if not obj.hit then
+                if math.random(5) == 1 then
+                  
+                  -- maintain reference so that it can be set to nil
+                  local gem = GameObject {
+                    position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 2) * TILE_SIZE),
+                    texture = 'gems',
+                    width = TILE_SIZE,
+                    height = TILE_SIZE,
+                    frame = math.random(#GEMS),
+                    collider = Collider {
+                      center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+                      size = Vector2D(TILE_SIZE, TILE_SIZE)
+                    },
+                    consumable = true,
+                    -- gems have a function to add to the player's score
+                    onConsume = function(player, object)
+                      player.score = player.score + 100
+                    end
+                  }
+                  
+                  table.insert(objects, gem)
+                end
+                
+                obj.hit = true
+              end
+            end
           }
         )
       end
