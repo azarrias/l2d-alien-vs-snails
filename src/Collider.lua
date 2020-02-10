@@ -64,9 +64,11 @@ end
 function Collider:checkEntityCollisions()
   for k, entity in pairs(self.parent.level.entities) do
     if self:collides(entity.collider) then
-      table.remove(self.parent.level.entities, k)
+      return table.remove(self.parent.level.entities, k)
     end
   end
+  
+  return nil
 end
 
 function Collider:collides(other)

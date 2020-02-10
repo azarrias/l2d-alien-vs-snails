@@ -58,6 +58,8 @@ function GameStatePlay:update(dt)
 end
 
 function GameStatePlay:render()
+  love.graphics.push()
+  
   -- draw background two times to complete the level with it flipped vertically below
   love.graphics.draw(TEXTURES['backgrounds'], FRAMES['backgrounds'][self.background], 
     math.floor(-self.backgroundX), 0)
@@ -74,8 +76,16 @@ function GameStatePlay:render()
   -- as things are attempted to be drawn fractionally and then forced onto a small virtual canvas
   love.graphics.translate(-math.floor(self.camera.position.x), 0)
   
+  -- draw level and player
   self.level:render()
-  
-  -- draw animated player
   self.player:render()
+  
+  -- pop to render HUD elements regardless of the camera position
+  love.graphics.pop()
+  
+  love.graphics.setFont(FONTS['medium'])
+  love.graphics.setColor(0, 0, 0, 1)
+  love.graphics.print(tostring(self.player.score), 5, 5)
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.print(tostring(self.player.score), 4, 4)
 end
