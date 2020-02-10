@@ -42,6 +42,10 @@ function PlayerStateFalling:update(dt)
     else
       self.player.position.y = gameObject.position.y + gameObject.collider.center.y - gameObject.collider.size.y / 2 - self.player.height
     end
+    
+  -- go back to start if the player falls below boundaries
+  elseif self.player.position.y > VIRTUAL_HEIGHT then
+    gameStateMachine:change('start')
   
   -- if the player is moving in the air, check for side collisions
   elseif love.keyboard.isDown('left') then
