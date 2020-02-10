@@ -36,6 +36,10 @@ function love.load()
     ['play'] = function() return GameStatePlay() end
   }
   gameStateMachine:change('start')
+  
+  SOUNDS['music']:setLooping(true)
+  SOUNDS['music']:setVolume(0.5)
+  SOUNDS['music']:play()
 
   love.keyboard.keysPressed = {}
 end

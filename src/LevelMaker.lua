@@ -88,14 +88,18 @@ function LevelMaker.create(width, height)
                     -- gems have a function to add to the player's score
                     onConsume = function(player, object)
                       player.score = player.score + 100
+                      SOUNDS['pickup']:play()
                     end
                   }
                   
+                  SOUNDS['powerup-reveal']:play()
                   table.insert(objects, gem)
                 end
                 
                 obj.hit = true
               end
+              
+              SOUNDS['empty-block']:play()
             end
           }
         )

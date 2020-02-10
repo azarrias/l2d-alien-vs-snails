@@ -31,3 +31,14 @@ function Player:render(dt)
   self.leftCollider:render()
   self.rightCollider:render()
 end
+
+function Player:die()
+  SOUNDS['death']:play()
+  gameStateMachine:change('start')
+end
+
+function Player:killSnail()
+  self.score = self.score + 100
+  SOUNDS['kill']:play()
+  SOUNDS['kill2']:play()
+end

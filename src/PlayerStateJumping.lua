@@ -13,6 +13,7 @@ function PlayerStateJumping:init(player, gravity)
 end
 
 function PlayerStateJumping:enter(params)
+  SOUNDS['jump']:play()
   self.player.velocity.y = PLAYER_JUMP_VELOCITY
 end
 
@@ -46,7 +47,7 @@ function PlayerStateJumping:update(dt)
   if self.player.topCollider:checkEntityCollisions() or
     self.player.leftCollider:checkEntityCollisions() or
     self.player.rightCollider:checkEntityCollisions() then
-      gameStateMachine:change('start')
+      self.player:die()
   end
   
   -- if there are collidable tiles above, go to falling state

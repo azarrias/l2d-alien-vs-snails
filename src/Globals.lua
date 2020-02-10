@@ -111,6 +111,17 @@ FONTS = {
   ['large'] = love.graphics.newFont('fonts/font.ttf', 32),
   ['title'] = love.graphics.newFont('fonts/ArcadeAlternate.ttf', 32)
 }
+
+SOUNDS = {
+  ['jump'] = love.audio.newSource('sounds/jump.wav', 'static'),
+  ['death'] = love.audio.newSource('sounds/death.wav', 'static'),
+  ['music'] = love.audio.newSource('sounds/music.wav', 'stream'),
+  ['powerup-reveal'] = love.audio.newSource('sounds/powerup-reveal.wav', 'static'),
+  ['pickup'] = love.audio.newSource('sounds/pickup.wav', 'static'),
+  ['empty-block'] = love.audio.newSource('sounds/empty-block.wav', 'static'),
+  ['kill'] = love.audio.newSource('sounds/kill.wav', 'static'),
+  ['kill2'] = love.audio.newSource('sounds/kill2.wav', 'static')
+}
   
 -- game object IDs that corresponds to the sprite number in the respective sprite sheet
 BUSH_IDS = { 1, 2, 5, 6, 7 }

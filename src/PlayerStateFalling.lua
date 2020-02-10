@@ -26,11 +26,11 @@ function PlayerStateFalling:update(dt)
   local gameObject = self.player.bottomCollider:checkObjectCollisions()
 
   if self.player.bottomCollider:checkEntityCollisions() then
-    self.player.score = self.player.score + 100
+    self.player:killSnail()
   elseif self.player.topCollider:checkEntityCollisions() or
     self.player.leftCollider:checkEntityCollisions() or
     self.player.rightCollider:checkEntityCollisions() then
-      gameStateMachine:change('start')
+      self.player:die()
   end
   
   -- if there are collidable tiles below, go to walking or idle state
@@ -53,7 +53,7 @@ function PlayerStateFalling:update(dt)
     
   -- go back to start if the player falls below boundaries
   elseif self.player.position.y > VIRTUAL_HEIGHT then
-    gameStateMachine:change('start')
+    self.player:die()
   
   -- if the player is moving in the air, check for side collisions
   elseif love.keyboard.isDown('left') then
