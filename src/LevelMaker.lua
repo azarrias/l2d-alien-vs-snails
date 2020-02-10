@@ -75,7 +75,7 @@ function LevelMaker.create(width, height)
                   
                   -- maintain reference so that it can be set to nil
                   local gem = GameObject {
-                    position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 2) * TILE_SIZE),
+                    position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 1) * TILE_SIZE - 4),
                     texture = 'gems',
                     width = TILE_SIZE,
                     height = TILE_SIZE,
@@ -92,6 +92,10 @@ function LevelMaker.create(width, height)
                     end
                   }
                   
+                  -- tween animation to make the gem move up from the block
+                  Timer.tween(0.1, {
+                    [gem.position] = { y = ((spawnPillar and 2 or 4) - 2) * TILE_SIZE }
+                  })                  
                   SOUNDS['powerup-reveal']:play()
                   table.insert(objects, gem)
                 end

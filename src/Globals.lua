@@ -1,6 +1,7 @@
 -- libraries
 Class = require 'libs.class'
 push = require 'libs.push'
+Timer = require 'libs.knife.timer'
 
 -- general purpose / utility
 require 'Animation'

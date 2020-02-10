@@ -26,10 +26,10 @@ function Player:render(dt)
   Entity.render(self)
   
   -- draw collider rects
-  self.topCollider:render()
+--[[  self.topCollider:render()
   self.bottomCollider:render()
   self.leftCollider:render()
-  self.rightCollider:render()
+  self.rightCollider:render()]]
 end
 
 function Player:die()

@@ -14,7 +14,7 @@ function Snail:render()
   Entity.render(self)
   
   -- draw collider rect
-  if self.collider then
+--[[  if self.collider then
     self.collider:render()
-  end
+  end]]
 end
