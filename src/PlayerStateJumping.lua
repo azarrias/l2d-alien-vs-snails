@@ -42,6 +42,13 @@ function PlayerStateJumping:update(dt)
     return
   end
   
+  -- check if there are collisions with any entities and die if so
+  if self.player.topCollider:checkEntityCollisions() or
+    self.player.leftCollider:checkEntityCollisions() or
+    self.player.rightCollider:checkEntityCollisions() then
+      gameStateMachine:change('start')
+  end
+  
   -- if there are collidable tiles above, go to falling state
   if tileLeftTop or tileRightTop then
     self.player.velocity.y = 0

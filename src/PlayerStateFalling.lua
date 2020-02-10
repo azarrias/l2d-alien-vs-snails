@@ -22,11 +22,15 @@ function PlayerStateFalling:update(dt)
   local tileRightBottom = self.player.bottomCollider:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
   
   -- check if there is collision with any game object / entity going down
+  -- collisions with any entities other than falling down will kill the player
   local gameObject = self.player.bottomCollider:checkObjectCollisions()
-  local entity = self.player.bottomCollider:checkEntityCollisions()
-  
-  if entity then
+
+  if self.player.bottomCollider:checkEntityCollisions() then
     self.player.score = self.player.score + 100
+  elseif self.player.topCollider:checkEntityCollisions() or
+    self.player.leftCollider:checkEntityCollisions() or
+    self.player.rightCollider:checkEntityCollisions() then
+      gameStateMachine:change('start')
   end
   
   -- if there are collidable tiles below, go to walking or idle state

@@ -21,6 +21,12 @@ function PlayerStateMoving:update(dt)
   -- check for game objects below
   local gameObject = self.player.bottomCollider:checkObjectCollisions()
   
+  -- check if there are collisions with any entities and die if so
+  if self.player.leftCollider:checkEntityCollisions() or
+    self.player.rightCollider:checkEntityCollisions() then
+      gameStateMachine:change('start')
+  end
+  
   -- go to idle if the player is not giving any input
   -- go to falling state if there are no tiles below
   if not love.keyboard.isDown('left') and not love.keyboard.isDown('right') then
