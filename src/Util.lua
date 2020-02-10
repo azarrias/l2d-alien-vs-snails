@@ -84,3 +84,38 @@ function print_r (t)
     end
     print()
 end
+
+--[[
+    Given a table of formatted text tables, render them vertically and horizontally centered
+    The keys in the formatted text tables are:
+    font - DEFAULT: love.graphics.getFont()
+    textColor - DEFAULT: {1, 1, 1, 1}
+    shadow - DEFAULT: false
+    string
+  ]]
+function RenderCenteredText(formattedText)
+  local accumulated_height = 0
+  
+  -- calculate the accumulated height and populate the formatted text table with defaults if needed
+  for k, line in pairs(formattedText) do
+    line.font = line.font ~= nil and line.font or love.graphics.getFont()
+    line.shadow = line.shadow ~= nil and line.shadow or false
+    line.accumulated_height = accumulated_height
+    accumulated_height = accumulated_height + line.font:getHeight()
+    line.textColor = line.textColor or { 1, 1, 1, 1 }
+  end
+  
+  local padding = math.floor((VIRTUAL_HEIGHT - accumulated_height) / 2)
+  
+  for k, line in pairs(formattedText) do
+    love.graphics.setFont(line.font)
+    if line.shadow then
+      love.graphics.setColor({ 0, 0, 0, 1 })
+      love.graphics.printf(line.string, 1, padding + line.accumulated_height + 1,
+        VIRTUAL_WIDTH, 'center')
+    end
+    love.graphics.setColor(line.textColor)
+    love.graphics.printf(line.string, 0, padding + line.accumulated_height,
+      VIRTUAL_WIDTH, 'center')
+  end
+end

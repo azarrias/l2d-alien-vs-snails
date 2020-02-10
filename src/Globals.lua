@@ -30,6 +30,8 @@ require 'Vector2D'
 --[[
     constants
   ]]
+GAME_TITLE = 'Alien vs Snails'
+  
 -- y coord of the top ground tile
 TOP_GROUND_TILE_Y = 7
 
@@ -100,6 +102,13 @@ FRAMES['tilesets'] = GenerateTileSets(FRAMES['tiles'],
 
 FRAMES['toppersets'] = GenerateTileSets(FRAMES['toppers'], 
     TOPPER_SETS_WIDE, TOPPER_SETS_TALL, TILE_SET_WIDTH, TILE_SET_HEIGHT)
+  
+FONTS = {
+  ['small'] = love.graphics.newFont('fonts/font.ttf', 8),
+  ['medium'] = love.graphics.newFont('fonts/font.ttf', 16),
+  ['large'] = love.graphics.newFont('fonts/font.ttf', 32),
+  ['title'] = love.graphics.newFont('fonts/ArcadeAlternate.ttf', 32)
+}
   
 -- game object IDs that corresponds to the sprite number in the respective sprite sheet
 BUSH_IDS = {
