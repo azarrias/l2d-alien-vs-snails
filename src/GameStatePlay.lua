@@ -38,6 +38,22 @@ function GameStatePlay:init()
       }
   })
 
+  -- calculate initial position of the player, to avoid dropping it on top of a chasm
+  local groundFound = false
+  local x = 0
+  
+  while not groundFound do
+    x = x + 1
+    
+    for y = 1, self.player.level.tileMap.height do
+      if self.player.level.tileMap.tiles[y][x].id == TILE_ID_GROUND then
+        groundFound = true
+        break
+      end
+    end
+  end
+
+  self.player.position.x = (x - 1) * TILE_SIZE
   self.player:changeState('falling')
   
   self.camera = Camera(self.player)
