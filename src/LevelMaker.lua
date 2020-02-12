@@ -32,7 +32,7 @@ function LevelMaker.create(width, height)
     local isChasm = false
     
     -- 15% random chance to skip this column; i.e. a chasm
-    if x ~= keyPos and x ~= lockPos and math.random(100) < 15 then
+    if x ~= keyPos and x ~= lockPos and x < width - 6 and math.random(100) < 15 then
       -- workaround for lua missing the 'continue' statement
       isChasm = true
     end
@@ -41,8 +41,8 @@ function LevelMaker.create(width, height)
       -- 12.5% random chance for a pillar and the same goes for bushes
       -- 10% random chance to spawn a block
       local spawnPillar = math.random(8) == 1
-      local spawnBush = x ~= keyPos and x ~= lockPos and math.random(8) == 1
-      local spawnBlock = x ~= keyPos and x ~= lockPos and math.random(10) == 1
+      local spawnBush = x ~= keyPos and x ~= lockPos and x < width - 6 and math.random(8) == 1
+      local spawnBlock = x ~= keyPos and x ~= lockPos and x < width - 6 and math.random(10) == 1
       
       if spawnPillar then
         groundHeight = 5 - 1
