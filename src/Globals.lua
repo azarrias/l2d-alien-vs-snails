@@ -86,7 +86,8 @@ TEXTURES = {
   ['jump-blocks'] = love.graphics.newImage('graphics/jump_blocks.png'),
   ['backgrounds'] = love.graphics.newImage('graphics/backgrounds.png'),
   ['gems'] = love.graphics.newImage('graphics/gems.png'),
-  ['keys'] = love.graphics.newImage('graphics/keys_and_locks.png')
+  ['keys'] = love.graphics.newImage('graphics/keys_and_locks.png'),
+  ['flags'] = love.graphics.newImage('graphics/flags.png')
 }
 
 FRAMES = {
@@ -98,7 +99,8 @@ FRAMES = {
   ['jump-blocks'] = GenerateQuads(TEXTURES['jump-blocks'], TILE_SIZE, TILE_SIZE),
   ['backgrounds'] = GenerateQuads(TEXTURES['backgrounds'], BACKGROUND_WIDTH, BACKGROUND_HEIGHT),
   ['gems'] = GenerateQuads(TEXTURES['gems'], TILE_SIZE, TILE_SIZE),
-  ['keys'] = GenerateQuads(TEXTURES['keys'], TILE_SIZE, TILE_SIZE)
+  ['keys'] = GenerateQuads(TEXTURES['keys'], TILE_SIZE, TILE_SIZE),
+  ['flags'] = GenerateQuads(TEXTURES['flags'], TILE_SIZE, TILE_SIZE)
 }
 
 -- these need to be added after FRAMES is initialized because they refer to it from within

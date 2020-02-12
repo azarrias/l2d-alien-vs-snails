@@ -10,10 +10,13 @@ function Player:init(def)
   self.leftCollider.parent, self.rightCollider.parent = self, self
   self.score = 0
   self.hasKey = false
+  self.hasFlag = false
 end
 
 function Player:update(dt)
-  Entity.update(self, dt)
+  if not self.hasFlag then
+    Entity.update(self, dt)
+  end
   
   -- constrain player X no matter which state
   if self.position.x <= 0 then

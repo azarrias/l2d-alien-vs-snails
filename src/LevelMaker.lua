@@ -153,12 +153,72 @@ function LevelMaker.create(width, height)
             size = Vector2D(TILE_SIZE, TILE_SIZE)
           },
           trigger = true,
-          -- keys have a function to add to the player's score
+          -- locks have a function that creates the flag post
           onTrigger = function(player, objectKey)
             if player.hasKey then
               player.score = player.score + 100
               SOUNDS['pickup']:play()
               player.hasKey = false
+              
+              -- generate flag that will allow to complete the level
+              local flagPoleBase = GameObject {
+                position = Vector2D((width - 5 - 1) * TILE_SIZE, (TOP_GROUND_TILE_Y - 1 - 1) * TILE_SIZE),
+                texture = 'flags',
+                width = TILE_SIZE,
+                height = TILE_SIZE,
+                frame = 19,
+                collider = Collider {
+                  center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+                  size = Vector2D(TILE_SIZE, TILE_SIZE)
+                },
+                trigger = true,
+                -- the flag should appear when the flag pole has been triggered
+                onTrigger = function(player, objectKey)
+                  player.hasFlag = true
+                  SOUNDS['pickup']:play()
+                end
+              }
+              table.insert(objects, flagPoleBase)
+              
+              local flagPoleMiddle = GameObject {
+                position = Vector2D((width - 5 - 1) * TILE_SIZE, (TOP_GROUND_TILE_Y - 2 - 1) * TILE_SIZE),
+                texture = 'flags',
+                width = TILE_SIZE,
+                height = TILE_SIZE,
+                frame = 10,
+                collider = Collider {
+                  center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+                  size = Vector2D(TILE_SIZE, TILE_SIZE)
+                },
+                trigger = true,
+                -- the flag should appear when the flag pole has been triggered
+                onTrigger = function(player, objectKey)
+                  player.hasFlag = true
+                  SOUNDS['pickup']:play()
+                end
+              }
+              table.insert(objects, flagPoleMiddle)
+              
+              local flagPoleTop = GameObject {
+                position = Vector2D((width - 5 - 1) * TILE_SIZE, (TOP_GROUND_TILE_Y - 3 - 1) * TILE_SIZE),
+                texture = 'flags',
+                width = TILE_SIZE,
+                height = TILE_SIZE,
+                frame = 1,
+                collider = Collider {
+                  center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+                  size = Vector2D(TILE_SIZE, TILE_SIZE)
+                },
+                trigger = true,
+                -- the flag should appear when the flag pole has been triggered
+                onTrigger = function(player, objectKey)
+                  player.hasFlag = true
+                  SOUNDS['pickup']:play()
+                end
+              }
+              table.insert(objects, flagPoleTop)
+              
+              -- remove containing lock object at the end
               table.remove(objects, objectKey)
             end
           end
