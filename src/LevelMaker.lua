@@ -40,7 +40,7 @@ function LevelMaker.create(width, height)
     if not isChasm then
       -- 12.5% random chance for a pillar and the same goes for bushes
       -- 10% random chance to spawn a block
-      local spawnPillar = math.random(8) == 1
+      local spawnPillar = x < width - 6 and math.random(8) == 1
       local spawnBush = x ~= keyPos and x ~= lockPos and x < width - 6 and math.random(8) == 1
       local spawnBlock = x ~= keyPos and x ~= lockPos and x < width - 6 and math.random(10) == 1
       
@@ -174,6 +174,14 @@ function LevelMaker.create(width, height)
                 trigger = true,
                 -- the flag should appear when the flag pole has been triggered
                 onTrigger = function(player, objectKey)
+                  local flag = GameObject {
+                    position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
+                    texture = 'flags',
+                    width = TILE_SIZE,
+                    height = TILE_SIZE,
+                    frame = 7
+                  }                  
+                  table.insert(objects, flag)
                   player.hasFlag = true
                   SOUNDS['pickup']:play()
                 end
@@ -193,6 +201,14 @@ function LevelMaker.create(width, height)
                 trigger = true,
                 -- the flag should appear when the flag pole has been triggered
                 onTrigger = function(player, objectKey)
+                  local flag = GameObject {
+                    position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
+                    texture = 'flags',
+                    width = TILE_SIZE,
+                    height = TILE_SIZE,
+                    frame = 7
+                  }                  
+                  table.insert(objects, flag)
                   player.hasFlag = true
                   SOUNDS['pickup']:play()
                 end
@@ -212,6 +228,14 @@ function LevelMaker.create(width, height)
                 trigger = true,
                 -- the flag should appear when the flag pole has been triggered
                 onTrigger = function(player, objectKey)
+                  local flag = GameObject {
+                    position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
+                    texture = 'flags',
+                    width = TILE_SIZE,
+                    height = TILE_SIZE,
+                    frame = 7
+                  }                  
+                  table.insert(objects, flag)
                   player.hasFlag = true
                   SOUNDS['pickup']:play()
                 end
