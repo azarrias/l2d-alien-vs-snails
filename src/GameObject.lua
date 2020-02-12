@@ -11,8 +11,10 @@ function GameObject:init(def)
     self.collider.parent = self
   end
   self.consumable = def.consumable
+  self.trigger = def.trigger
   self.onCollide = def.onCollide
   self.onConsume = def.onConsume
+  self.onTrigger = def.onTrigger
   self.hit = def.hit
 end
 

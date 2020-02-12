@@ -52,6 +52,8 @@ function Collider:checkObjectCollisions()
       if object.consumable then
         object.onConsume(self.parent)
         table.remove(self.parent.level.objects, k)
+      elseif object.trigger then
+        object.onTrigger(self.parent, k)
       else
         return object
       end

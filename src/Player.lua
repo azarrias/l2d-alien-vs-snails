@@ -9,6 +9,7 @@ function Player:init(def)
   self.topCollider.parent, self.bottomCollider.parent = self, self
   self.leftCollider.parent, self.rightCollider.parent = self, self
   self.score = 0
+  self.hasKey = false
 end
 
 function Player:update(dt)

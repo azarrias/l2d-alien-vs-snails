@@ -125,7 +125,7 @@ function LevelMaker.create(width, height)
           texture = 'keys',
           width = TILE_SIZE,
           height = TILE_SIZE,
-          frame = math.random(keySet),
+          frame = KEY_IDS[keySet],
           collider = Collider {
             center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
             size = Vector2D(TILE_SIZE, TILE_SIZE)
@@ -133,12 +133,38 @@ function LevelMaker.create(width, height)
           consumable = true,
           -- keys have a function to add to the player's score
           onConsume = function(player, object)
-            player.score = player.score + 100
+            player.hasKey = true
             SOUNDS['pickup']:play()
           end
         }
         
         table.insert(objects, key)
+      end
+      
+      if x == lockPos then
+        local lock = GameObject {
+          position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 1) * TILE_SIZE),
+          texture = 'keys',
+          width = TILE_SIZE,
+          height = TILE_SIZE,
+          frame = LOCK_IDS[keySet],
+          collider = Collider {
+            center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+            size = Vector2D(TILE_SIZE, TILE_SIZE)
+          },
+          trigger = true,
+          -- keys have a function to add to the player's score
+          onTrigger = function(player, objectKey)
+            if player.hasKey then
+              player.score = player.score + 100
+              SOUNDS['pickup']:play()
+              player.hasKey = false
+              table.remove(objects, objectKey)
+            end
+          end
+        }
+        
+        table.insert(objects, lock)
       end
       
       -- always generate ground
