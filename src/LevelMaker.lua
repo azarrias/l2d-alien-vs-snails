@@ -4,9 +4,17 @@ function LevelMaker.create(width, height)
   local tiles = {}
   local objects = {}
   
-  -- randomize tile set and topper set for the level
+  -- randomize tile set, topper set and key-lock set for the level
   local tileSet = math.random(#FRAMES['tilesets'])
   local topperSet = math.random(#FRAMES['toppersets'])
+  local keySet = math.random(#KEY_IDS)
+  
+  -- randomize position for the key and lock in this level
+  local keyPos = math.random(30, width - 30)
+  local lockPos = math.random(30, width - 30)
+  while lockPos == keyPos do
+    lockPos = math.random(30, width - 30)
+  end
   
   -- create 2D table full of sky transparent tiles, so we can just change tiles as needed
   for y = 1, height do
@@ -20,10 +28,11 @@ function LevelMaker.create(width, height)
   
   -- iterate over X at the top level to generate the level in columns instead of rows
   for x = 1, width do
+    local groundHeight = TOP_GROUND_TILE_Y - 1
     local isChasm = false
     
     -- 15% random chance to skip this column; i.e. a chasm
-    if math.random(100) < 15 then
+    if x ~= keyPos and x ~= lockPos and math.random(100) < 15 then
       -- workaround for lua missing the 'continue' statement
       isChasm = true
     end
@@ -32,10 +41,11 @@ function LevelMaker.create(width, height)
       -- 12.5% random chance for a pillar and the same goes for bushes
       -- 10% random chance to spawn a block
       local spawnPillar = math.random(8) == 1
-      local spawnBush = math.random(8) == 1
-      local spawnBlock = math.random(10) == 1
+      local spawnBush = x ~= keyPos and x ~= lockPos and math.random(8) == 1
+      local spawnBlock = x ~= keyPos and x ~= lockPos and math.random(10) == 1
       
       if spawnPillar then
+        groundHeight = 5 - 1
         for y = 5, 6 do
           tiles[y][x] = Tile(x, y, TILE_ID_GROUND, y == 5 and true or false, tileSet, topperSet)
         end
@@ -44,7 +54,7 @@ function LevelMaker.create(width, height)
       if spawnBush then
         table.insert(objects, 
           GameObject {
-            position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 4 or 6) - 1) * TILE_SIZE),
+            position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 1) * TILE_SIZE),
             texture = 'bushes',
             width = TILE_SIZE,
             height = TILE_SIZE,
@@ -57,7 +67,7 @@ function LevelMaker.create(width, height)
       if spawnBlock then
         table.insert(objects,
           GameObject {
-            position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 1) * TILE_SIZE),
+            position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 2 - 1) * TILE_SIZE),
             texture = 'jump-blocks',
             width = TILE_SIZE,
             height = TILE_SIZE,
@@ -75,7 +85,7 @@ function LevelMaker.create(width, height)
                   
                   -- maintain reference so that it can be set to nil
                   local gem = GameObject {
-                    position = Vector2D((x - 1) * TILE_SIZE, ((spawnPillar and 2 or 4) - 1) * TILE_SIZE - 4),
+                    position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 2 - 1) * TILE_SIZE - 4),
                     texture = 'gems',
                     width = TILE_SIZE,
                     height = TILE_SIZE,
@@ -94,7 +104,7 @@ function LevelMaker.create(width, height)
                   
                   -- tween animation to make the gem move up from the block
                   Timer.tween(0.1, {
-                    [gem.position] = { y = ((spawnPillar and 2 or 4) - 2) * TILE_SIZE }
+                    [gem.position] = { y = (groundHeight - 2 - 2) * TILE_SIZE }
                   })                  
                   SOUNDS['powerup-reveal']:play()
                   table.insert(objects, gem)
@@ -109,6 +119,28 @@ function LevelMaker.create(width, height)
         )
       end
             
+      if x == keyPos then
+        local key = GameObject {
+          position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 1) * TILE_SIZE),
+          texture = 'keys',
+          width = TILE_SIZE,
+          height = TILE_SIZE,
+          frame = math.random(keySet),
+          collider = Collider {
+            center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+            size = Vector2D(TILE_SIZE, TILE_SIZE)
+          },
+          consumable = true,
+          -- keys have a function to add to the player's score
+          onConsume = function(player, object)
+            player.score = player.score + 100
+            SOUNDS['pickup']:play()
+          end
+        }
+        
+        table.insert(objects, key)
+      end
+      
       -- always generate ground
       for y = TOP_GROUND_TILE_Y, height do
         tiles[y][x] = Tile(x, y, TILE_ID_GROUND, (not spawnPillar and y == TOP_GROUND_TILE_Y) and true or false, tileSet, topperSet)
