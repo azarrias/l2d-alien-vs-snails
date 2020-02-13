@@ -125,7 +125,8 @@ SOUNDS = {
   ['pickup'] = love.audio.newSource('sounds/pickup.wav', 'static'),
   ['empty-block'] = love.audio.newSource('sounds/empty-block.wav', 'static'),
   ['kill'] = love.audio.newSource('sounds/kill.wav', 'static'),
-  ['kill2'] = love.audio.newSource('sounds/kill2.wav', 'static')
+  ['kill2'] = love.audio.newSource('sounds/kill2.wav', 'static'),
+  ['level-complete'] = love.audio.newSource('sounds/level-complete.wav', 'static')
 }
   
 -- game object IDs that corresponds to the sprite number in the respective sprite sheet

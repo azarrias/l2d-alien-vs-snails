@@ -169,21 +169,36 @@ function LevelMaker.create(width, height)
                 frame = 19,
                 collider = Collider {
                   center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-                  size = Vector2D(TILE_SIZE, TILE_SIZE)
+                  size = Vector2D(4, TILE_SIZE)
                 },
                 trigger = true,
                 -- the flag should appear when the flag pole has been triggered
                 onTrigger = function(player, objectKey)
-                  local flag = GameObject {
-                    position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
-                    texture = 'flags',
-                    width = TILE_SIZE,
-                    height = TILE_SIZE,
-                    frame = 7
-                  }                  
-                  table.insert(objects, flag)
-                  player.hasFlag = true
-                  SOUNDS['pickup']:play()
+                  if not player.hasFlag then
+                    local flag = GameObject {
+                      position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
+                      texture = 'flags',
+                      width = TILE_SIZE,
+                      height = TILE_SIZE,
+                      frame = 7
+                    }                  
+                    table.insert(objects, flag)
+                    player.hasFlag = true
+                    SOUNDS['music']:stop()
+                    SOUNDS['level-complete']:play()
+                    Timer.tween(1, {
+                      [flag.position] = { y = (TOP_GROUND_TILE_Y - 4) * TILE_SIZE + 5 }
+                    })
+                    Timer.tween(1, {
+                      [player.position] = { y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - player.height }
+                    })
+                    Timer.after(2, 
+                      function () 
+                        SOUNDS['music']:play()
+                        gameStateMachine:change('play')
+                      end
+                    )
+                  end
                 end
               }
               table.insert(objects, flagPoleBase)
@@ -196,21 +211,36 @@ function LevelMaker.create(width, height)
                 frame = 10,
                 collider = Collider {
                   center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-                  size = Vector2D(TILE_SIZE, TILE_SIZE)
+                  size = Vector2D(4, TILE_SIZE)
                 },
                 trigger = true,
                 -- the flag should appear when the flag pole has been triggered
                 onTrigger = function(player, objectKey)
-                  local flag = GameObject {
-                    position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
-                    texture = 'flags',
-                    width = TILE_SIZE,
-                    height = TILE_SIZE,
-                    frame = 7
-                  }                  
-                  table.insert(objects, flag)
-                  player.hasFlag = true
-                  SOUNDS['pickup']:play()
+                  if not player.hasFlag then
+                    local flag = GameObject {
+                      position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
+                      texture = 'flags',
+                      width = TILE_SIZE,
+                      height = TILE_SIZE,
+                      frame = 7
+                    }                  
+                    table.insert(objects, flag)
+                    player.hasFlag = true
+                    SOUNDS['music']:stop()
+                    SOUNDS['level-complete']:play()
+                    Timer.tween(1, {
+                      [flag.position] = { y = (TOP_GROUND_TILE_Y - 4) * TILE_SIZE + 5 }
+                    })
+                    Timer.tween(1, {
+                      [player.position] = { y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - player.height }
+                    })
+                    Timer.after(2, 
+                      function () 
+                        SOUNDS['music']:play()
+                        gameStateMachine:change('play')
+                      end
+                    )
+                  end
                 end
               }
               table.insert(objects, flagPoleMiddle)
@@ -223,21 +253,36 @@ function LevelMaker.create(width, height)
                 frame = 1,
                 collider = Collider {
                   center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-                  size = Vector2D(TILE_SIZE, TILE_SIZE)
+                  size = Vector2D(4, TILE_SIZE)
                 },
                 trigger = true,
                 -- the flag should appear when the flag pole has been triggered
                 onTrigger = function(player, objectKey)
-                  local flag = GameObject {
-                    position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
-                    texture = 'flags',
-                    width = TILE_SIZE,
-                    height = TILE_SIZE,
-                    frame = 7
-                  }                  
-                  table.insert(objects, flag)
-                  player.hasFlag = true
-                  SOUNDS['pickup']:play()
+                  if not player.hasFlag then
+                    local flag = GameObject {
+                      position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
+                      texture = 'flags',
+                      width = TILE_SIZE,
+                      height = TILE_SIZE,
+                      frame = 7
+                    }                  
+                    table.insert(objects, flag)
+                    player.hasFlag = true
+                    SOUNDS['music']:stop()
+                    SOUNDS['level-complete']:play()
+                    Timer.tween(1, {
+                      [flag.position] = { y = (TOP_GROUND_TILE_Y - 4) * TILE_SIZE + 5 }
+                    })
+                    Timer.tween(1, {
+                      [player.position] = { y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - player.height }
+                    })
+                    Timer.after(2, 
+                      function () 
+                        SOUNDS['music']:play()
+                        gameStateMachine:change('play')
+                      end
+                    )
+                  end
                 end
               }
               table.insert(objects, flagPoleTop)
