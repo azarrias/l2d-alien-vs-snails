@@ -48,7 +48,7 @@ end
 
 function Collider:checkObjectCollisions()
   for k, object in pairs(self.parent.level.objects) do
-    if object.collider and self:collides(object.collider) then
+    if next(object.colliders) ~= nil and object.colliders['collider'] ~= nil and self:collides(object.colliders['collider']) then
       if object.consumable then
         object.onConsume(self.parent)
         table.remove(self.parent.level.objects, k)

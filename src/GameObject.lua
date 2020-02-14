@@ -6,10 +6,7 @@ function GameObject:init(def)
   self.width = def.width
   self.height = def.height
   self.frame = def.frame
-  self.collider = def.collider
-  if self.collider then
-    self.collider.parent = self
-  end
+  self.colliders = {}
   self.consumable = def.consumable
   self.trigger = def.trigger
   self.onCollide = def.onCollide
@@ -25,4 +22,9 @@ function GameObject:render()
 --[[  if self.collider then
     self.collider:render()
   end]]
+end
+
+function GameObject:addCollider(label, collider)
+  collider.parent = self
+  self.colliders[label] = collider
 end

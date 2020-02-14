@@ -52,248 +52,19 @@ function LevelMaker.create(width, height)
       end
       
       if spawnBush then
-        table.insert(objects, 
-          GameObject {
-            position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 1) * TILE_SIZE),
-            texture = 'bushes',
-            width = TILE_SIZE,
-            height = TILE_SIZE,
-            -- select random frame from the BUSH_IDS whitelist, then random row for variance
-            frame = BUSH_IDS[math.random(#BUSH_IDS)] + (math.random(4) - 1) * 7
-          }
-        )
+        LevelMaker.generateBush(objects, x, groundHeight)
       end
       
       if spawnBlock then
-        table.insert(objects,
-          GameObject {
-            position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 2 - 1) * TILE_SIZE),
-            texture = 'jump-blocks',
-            width = TILE_SIZE,
-            height = TILE_SIZE,
-            frame = math.random(#JUMP_BLOCK_IDS),
-            collider = Collider {
-              center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-              size = Vector2D(TILE_SIZE, TILE_SIZE)
-            },
-            hit = false,
-            -- collision function passes the object itself as an argument
-            onCollide = function(obj)
-              -- if the object is hit by the first time, it may randomly spawn a gem
-              if not obj.hit then
-                if math.random(5) == 1 then
-                  
-                  -- maintain reference so that it can be set to nil
-                  local gem = GameObject {
-                    position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 2 - 1) * TILE_SIZE - 4),
-                    texture = 'gems',
-                    width = TILE_SIZE,
-                    height = TILE_SIZE,
-                    frame = math.random(#GEMS),
-                    collider = Collider {
-                      center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-                      size = Vector2D(TILE_SIZE, TILE_SIZE)
-                    },
-                    consumable = true,
-                    -- gems have a function to add to the player's score
-                    onConsume = function(player, object)
-                      player.score = player.score + 100
-                      SOUNDS['pickup']:play()
-                    end
-                  }
-                  
-                  -- tween animation to make the gem move up from the block
-                  Timer.tween(0.1, {
-                    [gem.position] = { y = (groundHeight - 2 - 2) * TILE_SIZE }
-                  })                  
-                  SOUNDS['powerup-reveal']:play()
-                  table.insert(objects, gem)
-                end
-                
-                obj.hit = true
-              end
-              
-              SOUNDS['empty-block']:play()
-            end
-          }
-        )
+        LevelMaker.generateBlock(objects, x, groundHeight)
       end
             
       if x == keyPos then
-        local key = GameObject {
-          position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 1) * TILE_SIZE),
-          texture = 'keys',
-          width = TILE_SIZE,
-          height = TILE_SIZE,
-          frame = KEY_IDS[keySet],
-          collider = Collider {
-            center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-            size = Vector2D(TILE_SIZE, TILE_SIZE)
-          },
-          consumable = true,
-          -- keys have a function to add to the player's score
-          onConsume = function(player, object)
-            player.hasKey = true
-            SOUNDS['pickup']:play()
-          end
-        }
-        
-        table.insert(objects, key)
+        LevelMaker.generateKey(objects, x, groundHeight, keySet)
       end
       
       if x == lockPos then
-        local lock = GameObject {
-          position = Vector2D((x - 1) * TILE_SIZE, (groundHeight - 1) * TILE_SIZE),
-          texture = 'keys',
-          width = TILE_SIZE,
-          height = TILE_SIZE,
-          frame = LOCK_IDS[keySet],
-          collider = Collider {
-            center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-            size = Vector2D(TILE_SIZE, TILE_SIZE)
-          },
-          trigger = true,
-          -- locks have a function that creates the flag post
-          onTrigger = function(player, objectKey)
-            if player.hasKey then
-              player.score = player.score + 100
-              SOUNDS['pickup']:play()
-              player.hasKey = false
-              
-              -- generate flag that will allow to complete the level
-              local flagPoleBase = GameObject {
-                position = Vector2D((width - 5 - 1) * TILE_SIZE, (TOP_GROUND_TILE_Y - 1 - 1) * TILE_SIZE),
-                texture = 'flags',
-                width = TILE_SIZE,
-                height = TILE_SIZE,
-                frame = 19,
-                collider = Collider {
-                  center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-                  size = Vector2D(4, TILE_SIZE)
-                },
-                trigger = true,
-                -- the flag should appear when the flag pole has been triggered
-                onTrigger = function(player, objectKey)
-                  if not player.hasFlag then
-                    local flag = GameObject {
-                      position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
-                      texture = 'flags',
-                      width = TILE_SIZE,
-                      height = TILE_SIZE,
-                      frame = 7
-                    }                  
-                    table.insert(objects, flag)
-                    player.hasFlag = true
-                    SOUNDS['music']:stop()
-                    SOUNDS['level-complete']:play()
-                    Timer.tween(1, {
-                      [flag.position] = { y = (TOP_GROUND_TILE_Y - 4) * TILE_SIZE + 5 }
-                    })
-                    Timer.tween(1, {
-                      [player.position] = { y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - player.height }
-                    })
-                    Timer.after(2, 
-                      function () 
-                        SOUNDS['music']:play()
-                        gameStateMachine:change('play')
-                      end
-                    )
-                  end
-                end
-              }
-              table.insert(objects, flagPoleBase)
-              
-              local flagPoleMiddle = GameObject {
-                position = Vector2D((width - 5 - 1) * TILE_SIZE, (TOP_GROUND_TILE_Y - 2 - 1) * TILE_SIZE),
-                texture = 'flags',
-                width = TILE_SIZE,
-                height = TILE_SIZE,
-                frame = 10,
-                collider = Collider {
-                  center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-                  size = Vector2D(4, TILE_SIZE)
-                },
-                trigger = true,
-                -- the flag should appear when the flag pole has been triggered
-                onTrigger = function(player, objectKey)
-                  if not player.hasFlag then
-                    local flag = GameObject {
-                      position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
-                      texture = 'flags',
-                      width = TILE_SIZE,
-                      height = TILE_SIZE,
-                      frame = 7
-                    }                  
-                    table.insert(objects, flag)
-                    player.hasFlag = true
-                    SOUNDS['music']:stop()
-                    SOUNDS['level-complete']:play()
-                    Timer.tween(1, {
-                      [flag.position] = { y = (TOP_GROUND_TILE_Y - 4) * TILE_SIZE + 5 }
-                    })
-                    Timer.tween(1, {
-                      [player.position] = { y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - player.height }
-                    })
-                    Timer.after(2, 
-                      function () 
-                        SOUNDS['music']:play()
-                        gameStateMachine:change('play')
-                      end
-                    )
-                  end
-                end
-              }
-              table.insert(objects, flagPoleMiddle)
-              
-              local flagPoleTop = GameObject {
-                position = Vector2D((width - 5 - 1) * TILE_SIZE, (TOP_GROUND_TILE_Y - 3 - 1) * TILE_SIZE),
-                texture = 'flags',
-                width = TILE_SIZE,
-                height = TILE_SIZE,
-                frame = 1,
-                collider = Collider {
-                  center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
-                  size = Vector2D(4, TILE_SIZE)
-                },
-                trigger = true,
-                -- the flag should appear when the flag pole has been triggered
-                onTrigger = function(player, objectKey)
-                  if not player.hasFlag then
-                    local flag = GameObject {
-                      position = Vector2D((width - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
-                      texture = 'flags',
-                      width = TILE_SIZE,
-                      height = TILE_SIZE,
-                      frame = 7
-                    }                  
-                    table.insert(objects, flag)
-                    player.hasFlag = true
-                    SOUNDS['music']:stop()
-                    SOUNDS['level-complete']:play()
-                    Timer.tween(1, {
-                      [flag.position] = { y = (TOP_GROUND_TILE_Y - 4) * TILE_SIZE + 5 }
-                    })
-                    Timer.tween(1, {
-                      [player.position] = { y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - player.height }
-                    })
-                    Timer.after(2, 
-                      function () 
-                        SOUNDS['music']:play()
-                        gameStateMachine:change('play')
-                      end
-                    )
-                  end
-                end
-              }
-              table.insert(objects, flagPoleTop)
-              
-              -- remove containing lock object at the end
-              table.remove(objects, objectKey)
-            end
-          end
-        }
-        
-        table.insert(objects, lock)
+        LevelMaker.generateLock(objects, x, groundHeight, keySet, width)
       end
       
       -- always generate ground
@@ -307,4 +78,185 @@ function LevelMaker.create(width, height)
   
   return GameLevel(tileMap, objects)
 end
+
+function LevelMaker.generateObject(pos, t, f)
+  return GameObject {
+    position = pos,
+    texture = t,
+    width = TILE_SIZE,
+    height = TILE_SIZE,
+    frame = f
+  }
+end
   
+function LevelMaker.generateBush(objects, x, y)
+  table.insert(objects, LevelMaker.generateObject(
+    Vector2D((x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE),
+    'bushes',
+    BUSH_IDS[math.random(#BUSH_IDS)] + (math.random(4) - 1) * 7
+  ))
+end
+
+function LevelMaker.generateBlock(objects, x, y)
+  local block = LevelMaker.generateObject(
+    Vector2D((x - 1) * TILE_SIZE, (y - 2 - 1) * TILE_SIZE),
+    'jump-blocks',
+    math.random(#JUMP_BLOCK_IDS)
+  )
+  
+  local blockCollider = Collider {
+    center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+    size = Vector2D(TILE_SIZE, TILE_SIZE)
+  }
+  block:addCollider('collider', blockCollider)
+  block.hit = false
+  block.onCollide = function(obj)
+    if not obj.hit then
+      if math.random(5) == 1 then
+        local gem = LevelMaker.generateGem(x, y)
+        
+        -- tween animation to make the gem move up from the block
+        Timer.tween(0.1, {
+          [gem.position] = { y = (y - 2 - 2) * TILE_SIZE }
+        })                  
+        SOUNDS['powerup-reveal']:play()
+        table.insert(objects, gem)
+      end
+      
+      obj.hit = true
+    end
+    
+    SOUNDS['empty-block']:play()
+  end
+        
+  table.insert(objects, block)
+end
+
+function LevelMaker.generateGem(x, y)
+  -- maintain reference so that it can be set to nil
+  local gem = LevelMaker.generateObject(
+    Vector2D((x - 1) * TILE_SIZE, (y - 2 - 1) * TILE_SIZE - 4),
+    'gems',
+    math.random(#GEMS)
+  )
+  
+  local gemCollider = Collider {
+    center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+    size = Vector2D(TILE_SIZE, TILE_SIZE)
+  }
+  gem:addCollider('collider', gemCollider)
+  gem.consumable = true
+  gem.onConsume = function(player, object)
+    player.score = player.score + 100
+    SOUNDS['pickup']:play()
+  end
+
+  return gem
+end
+
+function LevelMaker.generateKey(objects, x, y, keySet)
+  local key = LevelMaker.generateObject(
+    Vector2D((x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE),
+    'keys',
+    KEY_IDS[keySet]
+  )
+  
+  local keyCollider = Collider {
+    center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+    size = Vector2D(TILE_SIZE, TILE_SIZE)
+  }
+  key:addCollider('collider', keyCollider)
+  key.consumable = true
+  key.onConsume = function(player, object)
+    player.hasKey = true
+    SOUNDS['pickup']:play()
+  end
+  
+  table.insert(objects, key)
+end
+
+function LevelMaker.generateLock(objects, x, y, keySet, mapWidth)
+  local lock = LevelMaker.generateObject(
+    Vector2D((x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE),
+    'keys',
+    LOCK_IDS[keySet]
+  )
+  
+  local lockCollider = Collider {
+    center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+    size = Vector2D(TILE_SIZE, TILE_SIZE)
+  }
+  lock:addCollider('collider', lockCollider)
+  lock.trigger = true
+  -- locks have a function that creates the flag post
+  lock.onTrigger = function(player, objectKey)
+    if player.hasKey then
+      player.score = player.score + 100
+      SOUNDS['pickup']:play()
+      player.hasKey = false
+      
+      local flagPoleParts = LevelMaker.generateFlagPoleParts(objects, mapWidth)
+      for k, part in pairs(flagPoleParts) do
+        table.insert(objects, part)
+      end
+      
+      -- remove containing lock object at the end
+      table.remove(objects, objectKey)
+    end
+  end
+  
+  table.insert(objects, lock)
+end
+
+function LevelMaker.generateFlagPoleParts(objects, mapWidth)
+  local flagPoleParts = {}
+  
+  for i = 1, 3 do
+    local part = LevelMaker.generateObject(
+      Vector2D((mapWidth - 5 - 1) * TILE_SIZE, (TOP_GROUND_TILE_Y - 1 - i) * TILE_SIZE),
+      'flags',
+      (3 - i) * 9 + 1
+    )
+    
+    local partCollider = Collider {
+      center = Vector2D(TILE_SIZE / 2, TILE_SIZE / 2),
+      size = Vector2D(4, TILE_SIZE)
+    }
+    part:addCollider('collider', partCollider)
+    part.trigger = true
+    -- the flag should appear when the flag pole has been triggered
+    part.onTrigger = function(player, objectKey)
+      if not player.hasFlag then
+        local flag = LevelMaker.generateFlag(mapWidth)
+        table.insert(objects, flag)
+        player.hasFlag = true
+        SOUNDS['music']:stop()
+        SOUNDS['level-complete']:play()
+        Timer.tween(1, {
+          [flag.position] = { y = (TOP_GROUND_TILE_Y - 4) * TILE_SIZE + 5 }
+        })
+        Timer.tween(1, {
+          [player.position] = { y = (TOP_GROUND_TILE_Y - 1) * TILE_SIZE - player.height }
+        })
+        Timer.after(2, 
+          function () 
+            SOUNDS['music']:play()
+            gameStateMachine:change('play')
+          end
+        )
+      end
+    end
+    
+    table.insert(flagPoleParts, part)
+  end
+  
+  return flagPoleParts
+end
+  
+function LevelMaker.generateFlag(mapWidth)
+  return LevelMaker.generateObject(
+    Vector2D((mapWidth - 5 - 1) * TILE_SIZE + 6, (TOP_GROUND_TILE_Y - 2) * TILE_SIZE),
+    'flags',
+    7
+  )
+end

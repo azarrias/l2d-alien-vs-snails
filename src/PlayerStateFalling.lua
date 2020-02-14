@@ -48,7 +48,8 @@ function PlayerStateFalling:update(dt)
     if tile then
       self.player.position.y = (tile.position.y - 1) * TILE_SIZE - self.player.height
     else
-      self.player.position.y = gameObject.position.y + gameObject.collider.center.y - gameObject.collider.size.y / 2 - self.player.height
+      self.player.position.y = gameObject.position.y + gameObject.colliders['collider'].center.y - 
+        gameObject.colliders['collider'].size.y / 2 - self.player.height
     end
     
   -- go back to start if the player falls below boundaries

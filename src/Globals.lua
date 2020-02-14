@@ -128,7 +128,7 @@ SOUNDS = {
   ['kill2'] = love.audio.newSource('sounds/kill2.wav', 'static'),
   ['level-complete'] = love.audio.newSource('sounds/level-complete.wav', 'static')
 }
-  
+
 -- game object IDs that corresponds to the sprite number in the respective sprite sheet
 BUSH_IDS = { 1, 2, 5, 6, 7 }
 GEMS = { 1, 2, 3, 4, 5, 6, 7, 8 }

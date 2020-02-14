@@ -35,7 +35,8 @@ function PlayerStateJumping:update(dt)
   -- check if there is collision with any game object going up
   local gameObject = self.player.topCollider:checkObjectCollisions()
   if gameObject then
-    self.player.position.y = gameObject.position.y + gameObject.collider.center.y + gameObject.collider.size.y / 2
+    self.player.position.y = gameObject.position.y + gameObject.colliders['collider'].center.y + 
+      gameObject.colliders['collider'].size.y / 2
     self.player.velocity.y = 0
     self.player:changeState('falling')
     gameObject.onCollide(gameObject)
