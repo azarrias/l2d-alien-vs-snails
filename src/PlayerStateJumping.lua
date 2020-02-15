@@ -14,7 +14,7 @@ end
 
 function PlayerStateJumping:enter(params)
   SOUNDS['jump']:play()
-  self.player.velocity.y = PLAYER_JUMP_VELOCITY
+  self.player.velocity.y = params.yVelocity
 end
 
 function PlayerStateJumping:update(dt)

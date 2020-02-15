@@ -26,6 +26,8 @@ function PlayerStateFalling:update(dt)
   local gameObject = self.player.bottomCollider:checkObjectCollisions()
 
   if self.player.bottomCollider:checkEntityCollisions() then
+    self.player:changeState('jumping',
+      { yVelocity = PLAYER_BOUNCE_VELOCITY })
     self.player:killSnail()
   elseif self.player.topCollider:checkEntityCollisions() or
     self.player.leftCollider:checkEntityCollisions() or

@@ -66,6 +66,7 @@ function PlayerStateMoving:update(dt)
   
   -- jump
   if love.keyboard.keysPressed['space'] and self.player.velocity.y == 0 then
-    self.player:changeState('jumping')
+    self.player:changeState('jumping',
+      { yVelocity = PLAYER_JUMP_VELOCITY })
   end
 end
