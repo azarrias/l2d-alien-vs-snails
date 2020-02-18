@@ -13,14 +13,15 @@ function Entity:init(def)
   self.spriteOrientation = def.spriteOrientation
   self.orientation = 'left'
   
+  self.colliders = {}
+  
   -- references to game level to check for collisions
   self.level = def.level
 end
 
-function Entity:addCollider(parent, collider)
-  self.collider = collider
-  self.collider.parent = parent
-  parent.collider.parent = parent
+function Entity:addCollider(label, collider)
+  collider.parent = self
+  self.colliders[label] = collider
 end
 
 function Entity:changeState(state, params)

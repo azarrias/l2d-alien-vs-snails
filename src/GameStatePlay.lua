@@ -8,35 +8,40 @@ function GameStatePlay:init()
   self.level:spawnEnemies()
   
   self.player = Player({
-      position = Vector2D(0, 0),
-      width = CHARACTER_WIDTH,
-      height = CHARACTER_HEIGHT,
-      texture = 'green-alien',
-      stateMachine = StateMachine {
-        ['idle'] = function() return PlayerStateIdle(self.player) end,
-        ['moving'] = function() return PlayerStateMoving(self.player) end,
-        ['jumping'] = function() return PlayerStateJumping(self.player, GRAVITY) end,
-        ['falling'] = function() return PlayerStateFalling(self.player, GRAVITY) end
-      },
-      spriteOrientation = 'right',
-      level = self.level,
-      topCollider = Collider {
-        center = Vector2D(CHARACTER_WIDTH / 2, 2),
-        size = Vector2D(10, 2)
-      },
-      bottomCollider = Collider {
-        center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT + 1),
-        size = Vector2D(8, 2)
-      },
-      leftCollider = Collider {
-        center = Vector2D(2, CHARACTER_HEIGHT / 2),
-        size = Vector2D(2, CHARACTER_HEIGHT - 4)
-      },
-      rightCollider = Collider {
-        center = Vector2D(CHARACTER_WIDTH - 2, CHARACTER_HEIGHT / 2),
-        size = Vector2D(2, CHARACTER_HEIGHT - 4)
-      }
+    position = Vector2D(0, 0),
+    width = CHARACTER_WIDTH,
+    height = CHARACTER_HEIGHT,
+    texture = 'green-alien',
+    stateMachine = StateMachine {
+      ['idle'] = function() return PlayerStateIdle(self.player) end,
+      ['moving'] = function() return PlayerStateMoving(self.player) end,
+      ['jumping'] = function() return PlayerStateJumping(self.player, GRAVITY) end,
+      ['falling'] = function() return PlayerStateFalling(self.player, GRAVITY) end
+    },
+    spriteOrientation = 'right',
+    level = self.level  
   })
+
+  topCollider = Collider {
+    center = Vector2D(CHARACTER_WIDTH / 2, 2),
+    size = Vector2D(10, 2)
+  }
+  bottomCollider = Collider {
+    center = Vector2D(CHARACTER_WIDTH / 2, CHARACTER_HEIGHT + 1),
+    size = Vector2D(8, 2)
+  }
+  leftCollider = Collider {
+    center = Vector2D(2, CHARACTER_HEIGHT / 2),
+    size = Vector2D(2, CHARACTER_HEIGHT - 4)
+  }
+  rightCollider = Collider {
+    center = Vector2D(CHARACTER_WIDTH - 2, CHARACTER_HEIGHT / 2),
+    size = Vector2D(2, CHARACTER_HEIGHT - 4)
+  }
+  self.player:addCollider('top', topCollider)
+  self.player:addCollider('bottom', bottomCollider)
+  self.player:addCollider('left', leftCollider)
+  self.player:addCollider('right', rightCollider)
 
   -- calculate initial position of the player, to avoid dropping it on top of a chasm
   local groundFound = false

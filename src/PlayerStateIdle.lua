@@ -26,9 +26,9 @@ function PlayerStateIdle:update(dt)
   end
   
   -- check if there are collisions with any entities and die if so
-  if self.player.topCollider:checkEntityCollisions() or
-    self.player.leftCollider:checkEntityCollisions() or
-    self.player.rightCollider:checkEntityCollisions() then
+  if self.player.colliders['top']:checkEntityCollisions() or
+    self.player.colliders['left']:checkEntityCollisions() or
+    self.player.colliders['right']:checkEntityCollisions() then
       gameStateMachine:change('start')
   end
 end

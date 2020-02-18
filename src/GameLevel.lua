@@ -56,12 +56,13 @@ function GameLevel:spawnEnemies()
                 ['moving'] = function() return SnailStateMoving(snail) end
               },
               spriteOrientation = 'left',
-              level = self,
-              collider = Collider {
-                center = Vector2D(CHARACTER_WIDTH / 2, 2),
-                size = Vector2D(10, 2)
-              }
+              level = self
             })
+            local snailCollider = Collider {
+              center = Vector2D(CHARACTER_WIDTH / 2, 2),
+              size = Vector2D(10, 2)
+            }
+            snail:addCollider('collider', snailCollider)
           
             snail:changeState('idle', {
               wait = math.random(5)

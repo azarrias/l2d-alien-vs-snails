@@ -15,8 +15,8 @@ function SnailStateMoving:init(snail)
 end
 
 function SnailStateMoving:enter(params)
-  self.snail.collider.center = Vector2D(CREATURE_WIDTH / 2, (CREATURE_HEIGHT + 5) / 2)
-  self.snail.collider.size = Vector2D(CREATURE_WIDTH - 2, CREATURE_HEIGHT - 5)
+  self.snail.colliders['collider'].center = Vector2D(CREATURE_WIDTH / 2, (CREATURE_HEIGHT + 5) / 2)
+  self.snail.colliders['collider'].size = Vector2D(CREATURE_WIDTH - 2, CREATURE_HEIGHT - 5)
 end
 
 function SnailStateMoving:update(dt)
@@ -36,8 +36,8 @@ function SnailStateMoving:update(dt)
   elseif self.snail.orientation == 'left' then
     self.snail.position.x = self.snail.position.x - SNAIL_MOVE_SPEED * dt
     
-    local tileLeftTop = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'left-top')
-    local tileLeftBottom = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'left-bottom')
+    local tileLeftTop = self.snail.colliders['collider']:checkTileCollisions(dt, self.snail.level.tileMap, 'left-top')
+    local tileLeftBottom = self.snail.colliders['collider']:checkTileCollisions(dt, self.snail.level.tileMap, 'left-bottom')
     
     -- if there are no tiles below or a solid tile on the current direction, turn around and go
     if tileLeftTop or not tileLeftBottom then
@@ -49,8 +49,8 @@ function SnailStateMoving:update(dt)
   elseif self.snail.orientation == 'right' then
     self.snail.position.x = self.snail.position.x + SNAIL_MOVE_SPEED * dt
     
-    local tileRightTop = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'right-top')
-    local tileRightBottom = self.snail.collider:checkTileCollisions(dt, self.snail.level.tileMap, 'right-bottom')
+    local tileRightTop = self.snail.colliders['collider']:checkTileCollisions(dt, self.snail.level.tileMap, 'right-top')
+    local tileRightBottom = self.snail.colliders['collider']:checkTileCollisions(dt, self.snail.level.tileMap, 'right-bottom')
     
     -- if there are no tiles below or a solid tile on the current direction, turn around and go
     if tileRightTop or not tileRightBottom then

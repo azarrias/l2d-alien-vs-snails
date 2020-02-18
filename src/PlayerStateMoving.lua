@@ -15,15 +15,15 @@ function PlayerStateMoving:update(dt)
   self.player.currentAnimation:update(dt)
   
   -- check the tiles below the player's feet
-  local tileLeftBottom = self.player.bottomCollider:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
-  local tileRightBottom = self.player.bottomCollider:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
+  local tileLeftBottom = self.player.colliders['bottom']:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
+  local tileRightBottom = self.player.colliders['bottom']:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
   
   -- check for game objects below
-  local gameObject = self.player.bottomCollider:checkObjectCollisions()
+  local gameObject = self.player.colliders['bottom']:checkObjectCollisions()
   
   -- check if there are collisions with any entities and die if so
-  if self.player.leftCollider:checkEntityCollisions() or
-    self.player.rightCollider:checkEntityCollisions() then
+  if self.player.colliders['left']:checkEntityCollisions() or
+    self.player.colliders['right']:checkEntityCollisions() then
       self.player:die()
   end
   
@@ -38,9 +38,9 @@ function PlayerStateMoving:update(dt)
     elseif love.keyboard.isDown('left') then    
       self.player.orientation = 'left'
       self.player.position.x = self.player.position.x - PLAYER_MOVE_SPEED * dt
-      local tileLeftTop = self.player.leftCollider:checkTileCollisions(dt, self.player.level.tileMap, 'left-top')
-      local tileLeftBottom = self.player.leftCollider:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
-      gameObject = self.player.leftCollider:checkObjectCollisions()
+      local tileLeftTop = self.player.colliders['left']:checkTileCollisions(dt, self.player.level.tileMap, 'left-top')
+      local tileLeftBottom = self.player.colliders['left']:checkTileCollisions(dt, self.player.level.tileMap, 'left-bottom')
+      gameObject = self.player.colliders['left']:checkObjectCollisions()
     
       if tileLeftTop or tileLeftBottom then
         local tile = tileLeftTop ~= nil and tileLeftTop or tileLeftBottom
@@ -51,9 +51,9 @@ function PlayerStateMoving:update(dt)
     elseif love.keyboard.isDown('right') then
       self.player.orientation = 'right'
       self.player.position.x = self.player.position.x + PLAYER_MOVE_SPEED * dt
-      local tileRightTop = self.player.rightCollider:checkTileCollisions(dt, self.player.level.tileMap, 'right-top')
-      local tileRightBottom = self.player.rightCollider:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
-      gameObject = self.player.rightCollider:checkObjectCollisions()
+      local tileRightTop = self.player.colliders['right']:checkTileCollisions(dt, self.player.level.tileMap, 'right-top')
+      local tileRightBottom = self.player.colliders['right']:checkTileCollisions(dt, self.player.level.tileMap, 'right-bottom')
+      gameObject = self.player.colliders['right']:checkObjectCollisions()
     
       if tileRightTop or tileRightBottom then
         local tile = tileRightTop ~= nil and tileRightTop or tileRightBottom
