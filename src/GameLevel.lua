@@ -53,10 +53,11 @@ function GameLevel:spawnEnemies()
               texture = 'creatures',
               stateMachine = StateMachine {
                 ['idle'] = function() return SnailStateIdle(snail) end,
-                ['moving'] = function() return SnailStateMoving(snail) end
+                ['moving'] = function() return SnailStateMoving(snail) end,
+                ['dying'] = function() return SnailStateDying(snail) end
               },
               spriteOrientation = 'left',
-              level = self
+              level = self              
             })
             local snailCollider = Collider {
               center = Vector2D(CHARACTER_WIDTH / 2, 2),

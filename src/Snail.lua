@@ -11,3 +11,7 @@ end
 function Snail:render()
   Entity.render(self)
 end
+
+function Snail:die()
+  self.flipVertical = true
+end

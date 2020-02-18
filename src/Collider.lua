@@ -65,8 +65,9 @@ end
 
 function Collider:checkEntityCollisions()
   for k, entity in pairs(self.parent.level.entities) do
-    if self:collides(entity.colliders['collider']) then
-      return table.remove(self.parent.level.entities, k)
+    if entity.colliders['collider'] and self:collides(entity.colliders['collider']) then
+--      return table.remove(self.parent.level.entities, k)
+      return k
     end
   end
   

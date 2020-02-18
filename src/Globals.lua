@@ -20,6 +20,7 @@ require 'PlayerStateIdle'
 require 'PlayerStateJumping'
 require 'PlayerStateMoving'
 require 'Snail'
+require 'SnailStateDying'
 require 'SnailStateIdle'
 require 'SnailStateMoving'
 require 'StateMachine'
@@ -73,6 +74,7 @@ GRAVITY = 6
 PLAYER_MOVE_SPEED = 40
 PLAYER_JUMP_VELOCITY = -200
 PLAYER_BOUNCE_VELOCITY = -130
+SNAIL_BOUNCE_VELOCITY = -100
 SNAIL_MOVE_SPEED = 10
 
 -- resources

@@ -13,6 +13,8 @@ function Entity:init(def)
   self.spriteOrientation = def.spriteOrientation
   self.orientation = 'left'
   
+  self.flipVertical = false
+  
   self.colliders = {}
   
   -- references to game level to check for collisions
@@ -39,7 +41,8 @@ function Entity:render()
     -- shift the character half its width and height, since the origin must be at the sprite's center
     math.floor(self.position.x) + self.width / 2, 
     math.floor(self.position.y) + self.height / 2,
-    0, self.orientation == self.spriteOrientation and 1 or -1, 1,
+    0, self.orientation == self.spriteOrientation and 1 or -1, 
+    self.flipVertical and -1 or 1,
     -- set origin to the sprite center (to allow reversing it through negative scaling)
     self.width / 2, self.height / 2)
 end

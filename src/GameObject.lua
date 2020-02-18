@@ -17,11 +17,6 @@ end
 
 function GameObject:render()
   love.graphics.draw(TEXTURES[self.texture], FRAMES[self.texture][self.frame], self.position.x, self.position.y)
-  
-  -- draw collider rect
---[[  if self.collider then
-    self.collider:render()
-  end]]
 end
 
 function GameObject:addCollider(label, collider)

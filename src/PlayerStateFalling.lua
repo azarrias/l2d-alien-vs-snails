@@ -24,11 +24,12 @@ function PlayerStateFalling:update(dt)
   -- check if there is collision with any game object / entity going down
   -- collisions with any entities other than falling down will kill the player
   local gameObject = self.player.colliders['bottom']:checkObjectCollisions()
+  local entityKey = self.player.colliders['bottom']:checkEntityCollisions()
 
-  if self.player.colliders['bottom']:checkEntityCollisions() then
+  if entityKey then
     self.player:changeState('jumping',
       { yVelocity = PLAYER_BOUNCE_VELOCITY })
-    self.player:killSnail()
+    self.player:killEntity(entityKey)
   elseif self.player.colliders['top']:checkEntityCollisions() or
     self.player.colliders['left']:checkEntityCollisions() or
     self.player.colliders['right']:checkEntityCollisions() then

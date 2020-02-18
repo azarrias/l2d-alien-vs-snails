@@ -29,8 +29,16 @@ function Player:die()
   gameStateMachine:change('start')
 end
 
-function Player:killSnail()
+function Player:killEntity(entityKey)
   self.score = self.score + 100
+  self.level.entities[entityKey]:changeState('dying', { 
+      yVelocity = SNAIL_BOUNCE_VELOCITY,
+      animation = self.level.entities[entityKey].animation 
+  })
   SOUNDS['kill']:play()
   SOUNDS['kill2']:play()
+  -- remove killed entity from game level after 5 seconds
+  Timer.after(5, function()
+    table.remove(self.level.entities, entityKey)
+  end)
 end
