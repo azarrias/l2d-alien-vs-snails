@@ -67,6 +67,8 @@ end
 function GameStatePlay:update(dt)
   Timer.update(dt)
   
+  self.level:clear()
+  
   -- exit if esc is pressed
   if love.keyboard.keysPressed['escape'] then
     love.event.quit()

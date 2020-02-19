@@ -27,6 +27,23 @@ function GameLevel:render()
 end
 
 --[[
+    Remove all nil references from tables in case they've set themselves to nil.
+]]
+function GameLevel:clear()
+    for i = #self.objects, 1, -1 do
+        if not self.objects[i] then
+            table.remove(self.objects, i)
+        end
+    end
+
+    for i = #self.entities, 1, -1 do
+        if not self.entities[i] then
+            table.remove(self.entities, i)
+        end
+    end
+end
+
+--[[
     Adds a series of enemies to the level randomly
 ]]
 function GameLevel:spawnEnemies()
