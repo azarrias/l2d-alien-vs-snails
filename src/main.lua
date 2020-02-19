@@ -1,7 +1,5 @@
 require 'Globals'
 
-local MOBILE_OS = (love._version_major > 0 or love._version_minor >= 9) and (love.system.getOS() == 'Android' or love.system.getOS() == 'OS X')
-local WEB_OS = (love._version_major > 0 or love._version_minor >= 9) and love.system.getOS() == 'Web'
 local FONT_SIZE = 16
 
 local CAMERA_SCROLL_SPEED = 40

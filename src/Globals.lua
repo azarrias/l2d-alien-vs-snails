@@ -33,6 +33,10 @@ require 'Vector2D'
     constants
   ]]
 GAME_TITLE = 'Alien vs Snails'
+
+-- OS checks in order to make necessary adjustments to support multiplatform
+MOBILE_OS = (love._version_major > 0 or love._version_minor >= 9) and (love.system.getOS() == 'Android' or love.system.getOS() == 'OS X')
+WEB_OS = (love._version_major > 0 or love._version_minor >= 9) and love.system.getOS() == 'Web'
   
 -- y coord of the top ground tile
 TOP_GROUND_TILE_Y = 7
@@ -80,7 +84,7 @@ SNAIL_MOVE_SPEED = 10
 -- resources
 TEXTURES = {
   ['tiles'] = love.graphics.newImage('graphics/tiles.png'),
-  ['toppers'] = love.graphics.newImage('graphics./tile_tops.png'),
+  ['toppers'] = love.graphics.newImage('graphics/tile_tops.png'),
   ['blue-alien'] = love.graphics.newImage('graphics/blue_alien.png'),
   ['green-alien'] = love.graphics.newImage('graphics/green_alien.png'),
   ['pink-alien'] = love.graphics.newImage('graphics/pink_alien.png'),
@@ -123,7 +127,7 @@ FONTS = {
 SOUNDS = {
   ['jump'] = love.audio.newSource('sounds/jump.wav', 'static'),
   ['death'] = love.audio.newSource('sounds/death.wav', 'static'),
-  ['music'] = love.audio.newSource('sounds/music.wav', 'stream'),
+  ['music'] = love.audio.newSource('sounds/music.wav', WEB_OS and 'static' or 'stream'),
   ['powerup-reveal'] = love.audio.newSource('sounds/powerup-reveal.wav', 'static'),
   ['pickup'] = love.audio.newSource('sounds/pickup.wav', 'static'),
   ['empty-block'] = love.audio.newSource('sounds/empty-block.wav', 'static'),
