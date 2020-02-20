@@ -26,9 +26,7 @@ local push = {
     pixelperfect = false,
     highdpi = true,
     canvas = true,
--- Workaround to support love.js 0.11.0-rc3 which is a pre-release of v11
---	stencil = true
-    stencil = love.system.getOS() ~= 'Web' and true or false
+  	stencil = true
   }
   
 }

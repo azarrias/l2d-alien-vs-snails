@@ -25,7 +25,8 @@ function love.load()
   push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
     vsync = true,
     fullscreen = MOBILE_OS,
-    resizable = not MOBILE_OS
+    resizable = not (MOBILE_OS or WEB_OS),
+    stencil = not WEB_OS and true or false
   })
   love.window.setTitle(GAME_TITLE)
   
